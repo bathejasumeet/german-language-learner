@@ -1,50 +1,49 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+Version change: 0.0.0 → 1.0.0
+Modified principles: All replaced with project-specific principles
+Added sections: User Experience Consistency, Performance Requirements
+Removed sections: None
+Templates requiring updates: ✅ plan-template.md, ✅ spec-template.md, ✅ tasks-template.md
+Follow-up TODOs: TODO(RATIFICATION_DATE): Confirm original ratification date if known
+-->
+
+# German Language Learner Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Code Quality (NON-NEGOTIABLE)
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+All code MUST adhere to strict style guidelines, be clearly structured, and include meaningful documentation. Code reviews are mandatory for all changes. Linting and static analysis tools MUST be integrated into the workflow. Dead code and anti-patterns are not permitted.
+Rationale: High code quality ensures maintainability, reduces defects, and accelerates onboarding.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Testing Standards
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+All features MUST be developed using a test-driven approach. Unit, integration, and end-to-end tests are required for all user-facing and core logic. Tests MUST be automated and run on every commit. No code is merged without passing all relevant tests.
+Rationale: Rigorous testing prevents regressions and ensures reliability for users.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. User Experience Consistency
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+All user interfaces and interactions MUST be consistent, accessible, and intuitive. Design patterns, terminology, and navigation flows are standardized across the application. User feedback is regularly solicited and incorporated.
+Rationale: Consistent UX reduces user confusion and increases engagement and satisfaction.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Performance Requirements
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+The system MUST meet defined performance targets for responsiveness and resource usage. All features are profiled and optimized as needed. Performance regressions are treated as critical issues and must be resolved before release.
+Rationale: Good performance is essential for usability and user retention.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Additional Constraints
+
+All code and documentation MUST be in English. Open-source dependencies MUST be approved and maintained. Security best practices are enforced throughout the codebase.
+
+## Development Workflow
+
+All changes are proposed via pull requests. Every pull request MUST be reviewed by at least one other contributor. Automated checks for code quality, tests, and performance are required before merging. Releases are versioned using semantic versioning.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other technical practices. Amendments require documentation, team approval, and a migration plan if breaking changes are introduced. All technical decisions MUST be justified with reference to these principles. Compliance is reviewed quarterly. Versioning follows semantic versioning: MAJOR for principle removals or redefinitions, MINOR for new principles or expanded guidance, PATCH for clarifications or non-semantic refinements.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): Confirm original ratification date if known | **Last Amended**: 2026-04-14
+
+<!-- Version: 1.0.0 | Ratified: TODO(RATIFICATION_DATE): Confirm original ratification date if known | Last Amended: 2026-04-14 -->
