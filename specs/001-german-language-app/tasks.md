@@ -68,9 +68,9 @@ description: "Task list for German Language Learning App"
 
 ### Tests for User Story 2
 
-- [ ] T028 [P] [US2] LLM-generated contract tests for flashcard API in backend/tests/contract/test_flashcards.py
-- [ ] T029 [P] [US2] LLM-generated integration tests for flashcard study flow in backend/tests/integration/test_flashcards.py
-- [ ] T030 [P] [US2] LLM-generated frontend tests for flashcard UI in frontend/tests/flashcards.test.js
+- [x] T028 [P] [US2] LLM-generated contract tests for flashcard API in backend/tests/contract/test_flashcards.py
+- [x] T029 [P] [US2] LLM-generated integration tests for flashcard study flow in backend/tests/integration/test_flashcards.py
+- [x] T030 [P] [US2] LLM-generated frontend tests for flashcard UI in frontend/tests/flashcards.test.js
 
 ### Implementation for User Story 2
 
@@ -91,9 +91,9 @@ description: "Task list for German Language Learning App"
 
 ### Tests for User Story 3
 
-- [ ] T038 [P] [US3] LLM-generated contract tests for quiz/progress API in backend/tests/contract/test_quiz.py
-- [ ] T039 [P] [US3] LLM-generated integration tests for quiz and progress in backend/tests/integration/test_quiz.py
-- [ ] T040 [P] [US3] LLM-generated frontend tests for quiz/progress UI in frontend/tests/quiz.test.js
+- [x] T038 [P] [US3] LLM-generated contract tests for quiz/progress API in backend/tests/contract/test_quiz.py
+- [x] T039 [P] [US3] LLM-generated integration tests for quiz and progress in backend/tests/integration/test_quiz.py
+- [x] T040 [P] [US3] LLM-generated frontend tests for quiz/progress UI in frontend/tests/quiz.test.js
 
 ### Implementation for User Story 3
 
