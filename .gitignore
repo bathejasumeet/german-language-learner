@@ -1,1 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+*.egg-info/
+
+# Node
+node_modules/
+build/
+dist/
+*.log
+.env*
+
+# Docker
+*.pid
+db/
+
+# VSCode/IDE
+.vscode/
+.idea/
+
+# Misc
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
 .idea/

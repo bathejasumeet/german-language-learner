@@ -1,0 +1,67 @@
+.word-list {
+  padding: 20px;
+}
+
+.word-list h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.word-list table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.word-list th {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  text-align: left;
+  font-weight: 500;
+}
+
+.word-list td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.word-list tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.no-words {
+  text-align: center;
+  color: #999;
+  padding: 40px 20px;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.error {
+  color: #d32f2f;
+  background: #ffebee;
+  border-radius: 4px;
+}

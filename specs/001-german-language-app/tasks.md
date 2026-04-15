@@ -11,14 +11,14 @@ description: "Task list for German Language Learning App"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create backend/ and frontend/ project structure per implementation plan
-- [ ] T002 Initialize Python FastAPI backend in backend/ with Docker support
-- [ ] T003 Initialize React frontend in frontend/
-- [ ] T004 [P] Add .env.example files for backend and frontend
-- [ ] T005 [P] Add README.md files for backend and frontend
-- [ ] T006 [P] Configure linting and formatting (black, isort, flake8 for backend; eslint, prettier for frontend)
-- [ ] T007 [P] Add .gitignore and Dockerfile for backend, docker-compose.yml at repo root
-- [ ] T008 [P] Setup db/ directory for PostgreSQL Docker volume (mountable, committable)
+- [x] T001 Create backend/ and frontend/ project structure per implementation plan
+- [x] T002 Initialize Python FastAPI backend in backend/ with Docker support
+- [x] T003 Initialize React frontend in frontend/
+- [x] T004 [P] Add .env.example files for backend and frontend
+- [x] T005 [P] Add README.md files for backend and frontend
+- [x] T006 [P] Configure linting and formatting (black, isort, flake8 for backend; eslint, prettier for frontend)
+- [x] T007 [P] Add .gitignore and Dockerfile for backend, docker-compose.yml at repo root
+- [x] T008 [P] Setup db/ directory for PostgreSQL Docker volume (mountable, committable)
 
 ---
 
@@ -26,15 +26,15 @@ description: "Task list for German Language Learning App"
 
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
-- [ ] T009 Setup PostgreSQL database via Docker Compose, mount db/ for persistence
-- [ ] T010 [P] Configure backend database connection using environment variables
-- [ ] T011 [P] Implement backend database models for Word, Flashcard, Quiz, Progress in backend/src/models/
-- [ ] T012 [P] Setup SQLAlchemy and Alembic for migrations in backend/
-- [ ] T013 [P] Implement backend API routing and error handling in backend/src/api/
-- [ ] T014 [P] Setup environment variable management for backend and frontend
-- [ ] T015 [P] Add initial test scaffolding: pytest for backend, Jest for frontend
-- [ ] T016 [P] Add LLM-based test generation script (Ollama compatible) in backend/tests/llm/
-- [ ] T017 [P] Add LLM-based test generation script (Ollama compatible) in frontend/tests/llm/
+- [x] T009 Setup PostgreSQL database via Docker Compose, mount db/ for persistence
+- [x] T010 [P] Configure backend database connection using environment variables
+- [x] T011 [P] Implement backend database models for Word, Flashcard, Quiz, Progress in backend/src/models/
+- [x] T012 [P] Setup SQLAlchemy and Alembic for migrations in backend/
+- [x] T013 [P] Implement backend API routing and error handling in backend/src/api/
+- [x] T014 [P] Setup environment variable management for backend and frontend
+- [x] T015 [P] Add initial test scaffolding: pytest for backend, Jest for frontend
+- [x] T016 [P] Add LLM-based test generation script (Ollama compatible) in backend/tests/llm/
+- [x] T017 [P] Add LLM-based test generation script (Ollama compatible) in frontend/tests/llm/
 
 ---
 
@@ -45,19 +45,19 @@ description: "Task list for German Language Learning App"
 
 ### Tests for User Story 1
 
-- [ ] T018 [P] [US1] LLM-generated contract tests for add/edit/delete word API in backend/tests/contract/test_words.py
-- [ ] T019 [P] [US1] LLM-generated integration tests for vocabulary CRUD in backend/tests/integration/test_words.py
-- [ ] T020 [P] [US1] LLM-generated frontend tests for vocabulary UI in frontend/tests/words.test.js
+- [x] T018 [P] [US1] LLM-generated contract tests for add/edit/delete word API in backend/tests/contract/test_words.py
+- [x] T019 [P] [US1] LLM-generated integration tests for vocabulary CRUD in backend/tests/integration/test_words.py
+- [x] T020 [P] [US1] LLM-generated frontend tests for vocabulary UI in frontend/tests/words.test.js
 
 ### Implementation for User Story 1
 
-- [ ] T021 [P] [US1] Implement Word model in backend/src/models/word.py
-- [ ] T022 [P] [US1] Implement CRUD API endpoints for words in backend/src/api/words.py
-- [ ] T023 [P] [US1] Implement vocabulary service logic in backend/src/services/vocabulary.py
-- [ ] T024 [P] [US1] Implement React components for vocabulary list and word form in frontend/src/components/Words/
-- [ ] T025 [P] [US1] Implement Redux or context state for vocabulary in frontend/src/services/vocabulary.js
-- [ ] T026 [US1] Add validation and error handling for word input (backend and frontend)
-- [ ] T027 [US1] Add logging for vocabulary operations in backend/src/services/vocabulary.py
+- [x] T021 [P] [US1] Implement Word model in backend/src/models/word.py
+- [x] T022 [P] [US1] Implement CRUD API endpoints for words in backend/src/api/words.py
+- [x] T023 [P] [US1] Implement vocabulary service logic in backend/src/services/vocabulary.py
+- [x] T024 [P] [US1] Implement React components for vocabulary list and word form in frontend/src/components/Words/
+- [x] T025 [P] [US1] Implement Redux or context state for vocabulary in frontend/src/services/vocabulary.js
+- [x] T026 [US1] Add validation and error handling for word input (backend and frontend)
+- [x] T027 [US1] Add logging for vocabulary operations in backend/src/services/vocabulary.py
 
 ---
 
