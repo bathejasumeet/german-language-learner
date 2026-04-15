@@ -1,10 +1,10 @@
-import { Vocabulary } from './pages/Vocabulary';
+import { Navigation } from './components/Navigation';
 import './App.css';
 
 function App() {
   return (
     <>
-      <Vocabulary />
+      <Navigation />
     </>
   );
 }

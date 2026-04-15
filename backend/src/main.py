@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.database import engine, Base
 from src.models import Word, Flashcard, Progress, Quiz
 from src.api.words import router as words_router
+from src.api.flashcards import router as flashcards_router
+from src.api.quiz import router as quiz_router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -21,6 +23,8 @@ app = FastAPI(
 
 # Include routers
 app.include_router(words_router)
+app.include_router(flashcards_router)
+app.include_router(quiz_router)
 
 # Add CORS middleware
 app.add_middleware(

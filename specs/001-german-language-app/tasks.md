@@ -74,13 +74,13 @@ description: "Task list for German Language Learning App"
 
 ### Implementation for User Story 2
 
-- [ ] T031 [P] [US2] Implement Flashcard model in backend/src/models/flashcard.py
-- [ ] T032 [P] [US2] Implement flashcard API endpoints in backend/src/api/flashcards.py
-- [ ] T033 [P] [US2] Implement flashcard service logic in backend/src/services/flashcards.py
-- [ ] T034 [P] [US2] Implement React components for flashcard study in frontend/src/components/Flashcards/
-- [ ] T035 [P] [US2] Implement state management for flashcards in frontend/src/services/flashcards.js
-- [ ] T036 [US2] Add validation and error handling for flashcard study (backend and frontend)
-- [ ] T037 [US2] Add logging for flashcard operations in backend/src/services/flashcards.py
+- [x] T031 [P] [US2] Implement Flashcard model in backend/src/models/flashcard.py
+- [x] T032 [P] [US2] Implement flashcard API endpoints in backend/src/api/flashcards.py
+- [x] T033 [P] [US2] Implement flashcard service logic in backend/src/services/flashcards.py
+- [x] T034 [P] [US2] Implement React components for flashcard study in frontend/src/components/Flashcards/
+- [x] T035 [P] [US2] Implement state management for flashcards in frontend/src/services/flashcards.js
+- [x] T036 [US2] Add validation and error handling for flashcard study (backend and frontend)
+- [x] T037 [US2] Add logging for flashcard operations in backend/src/services/flashcards.py
 
 ---
 
@@ -97,13 +97,13 @@ description: "Task list for German Language Learning App"
 
 ### Implementation for User Story 3
 
-- [ ] T041 [P] [US3] Implement Progress and Quiz models in backend/src/models/progress.py, backend/src/models/quiz.py
-- [ ] T042 [P] [US3] Implement quiz and progress API endpoints in backend/src/api/quiz.py
-- [ ] T043 [P] [US3] Implement quiz/progress service logic in backend/src/services/quiz.py
-- [ ] T044 [P] [US3] Implement React components for quiz and progress in frontend/src/components/Quiz/
-- [ ] T045 [P] [US3] Implement state management for quiz/progress in frontend/src/services/quiz.js
-- [ ] T046 [US3] Add validation and error handling for quiz/progress (backend and frontend)
-- [ ] T047 [US3] Add logging for quiz/progress operations in backend/src/services/quiz.py
+- [x] T041 [P] [US3] Implement Progress and Quiz models in backend/src/models/progress.py, backend/src/models/quiz.py
+- [x] T042 [P] [US3] Implement quiz and progress API endpoints in backend/src/api/quiz.py
+- [x] T043 [P] [US3] Implement quiz/progress service logic in backend/src/services/quiz.py
+- [x] T044 [P] [US3] Implement React components for quiz and progress in frontend/src/components/Quiz/
+- [x] T045 [P] [US3] Implement state management for quiz/progress in frontend/src/services/quiz.js
+- [x] T046 [US3] Add validation and error handling for quiz/progress (backend and frontend)
+- [x] T047 [US3] Add logging for quiz/progress operations in backend/src/services/quiz.py
 
 ---
 
