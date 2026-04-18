@@ -1,3 +1,4 @@
+import os
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -5,8 +6,11 @@ from sqlalchemy.orm import sessionmaker
 from src.main import app
 from src.database import Base, get_db
 
+# Set environment to test mode (before importing app modules)
+os.environ["ENV"] = "test"
+
 # Use an in-memory SQLite database for testing
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}

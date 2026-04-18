@@ -86,21 +86,31 @@ export const FlashcardStudy = () => {
   };
 
   if (loading && studyMode === 'select') {
-    return <div className="loading">Loading words...</div>;
+    return <div className="loading" role="status" aria-live="polite">Loading words...</div>;
   }
 
   if (studyMode === 'select') {
     return (
       <div className="flashcard-select">
         <h2>Select Words for Flashcards</h2>
-        {error && <div className="error">{error}</div>}
+        {error && <div className="error" role="alert" aria-live="assertive">{error}</div>}
         
-        <div className="words-grid">
+        <div className="words-grid" role="group" aria-label="Select words for flashcard study">
           {words.map((word) => (
             <div
               key={word.id}
               className={`word-card ${selectedWords.includes(word.id) ? 'selected' : ''}`}
               onClick={() => handleWordSelection(word.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleWordSelection(word.id);
+                }
+              }}
+              role="checkbox"
+              aria-checked={selectedWords.includes(word.id)}
+              aria-label={`${word.german_word} - ${word.meaning}`}
+              tabIndex="0"
             >
               <div className="german">{word.german_word}</div>
               <div className="meaning">{word.meaning}</div>
@@ -109,10 +119,12 @@ export const FlashcardStudy = () => {
         </div>
 
         <div className="actions">
-          <p>Selected: {selectedWords.length} words</p>
+          <p aria-live="polite">Selected: {selectedWords.length} words</p>
           <button
             onClick={handleGenerateFlashcards}
             disabled={selectedWords.length === 0 || loading}
+            aria-label={`Generate flashcards from ${selectedWords.length} selected words`}
+            aria-busy={loading}
           >
             {loading ? 'Generating...' : 'Generate Flashcards'}
           </button>

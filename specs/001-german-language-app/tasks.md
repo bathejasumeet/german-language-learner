@@ -109,13 +109,13 @@ description: "Task list for German Language Learning App"
 
 ## Final Phase: Polish & Cross-Cutting Concerns
 
-- [ ] T048 [P] Add accessibility and UX consistency checks for frontend
-- [ ] T049 [P] Add performance profiling for backend and frontend
-- [ ] T050 [P] Add security review and dependency audit
-- [ ] T051 [P] Add end-to-end test scripts for full user flows (LLM-generated)
-- [ ] T052 [P] Update documentation and usage examples in backend/README.md and frontend/README.md
-- [ ] T053 [P] Review .env.example files and ensure all config is via env vars
-- [ ] T054 [P] Final code review and constitution compliance check
+- [x] T048 [P] Add accessibility and UX consistency checks for frontend
+- [x] T049 [P] Add performance profiling for backend and frontend
+- [x] T050 [P] Add security review and dependency audit
+- [x] T051 [P] Add end-to-end test scripts for full user flows (LLM-generated)
+- [x] T052 [P] Update documentation and usage examples in backend/README.md and frontend/README.md
+- [x] T053 [P] Review .env.example files and ensure all config is via env vars
+- [x] T054 [P] Final code review and constitution compliance check
 
 ---
 

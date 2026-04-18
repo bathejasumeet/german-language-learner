@@ -94,14 +94,14 @@ export const QuizComponent = () => {
   };
 
   if (loading && quizState === 'start') {
-    return <div className="loading">Loading words...</div>;
+    return <div className="loading" role="status" aria-live="polite">Loading words...</div>;
   }
 
   if (quizState === 'start') {
     return (
       <div className="quiz-start">
         <h2>German Language Quiz</h2>
-        {error && <div className="error">{error}</div>}
+        {error && <div className="error" role="alert" aria-live="assertive">{error}</div>}
 
         <div className="form-group">
           <label htmlFor="questions">Number of Questions:</label>
@@ -109,6 +109,7 @@ export const QuizComponent = () => {
             id="questions"
             value={totalQuestions}
             onChange={(e) => setTotalQuestions(Math.min(words.length, parseInt(e.target.value)))}
+            aria-label="Select number of quiz questions"
           >
             {[5, 10, 15, 20].map((n) => (
               <option key={n} value={n}>
@@ -119,7 +120,7 @@ export const QuizComponent = () => {
         </div>
 
         <p>Available words: {words.length}</p>
-        <button onClick={startQuiz} disabled={words.length === 0}>
+        <button onClick={startQuiz} disabled={words.length === 0} aria-label="Start German language quiz">
           Start Quiz
         </button>
       </div>
@@ -132,7 +133,7 @@ export const QuizComponent = () => {
 
     return (
       <div className="quiz-container">
-        <div className="quiz-progress">
+        <div className="quiz-progress" role="progressbar" aria-valuenow={currentQuestion + 1} aria-valuemin="1" aria-valuemax={totalQuestions}>
           <div className="progress-bar">
             <div
               className="progress-fill"
@@ -149,12 +150,13 @@ export const QuizComponent = () => {
         <div className="quiz-question">
           <h3>What is the meaning of "{correctWord.german_word}"?</h3>
 
-          <div className="options">
+          <div className="options" role="group" aria-label="Answer options">
             {options.map((word) => (
               <button
                 key={word.id}
                 className="option-btn"
                 onClick={() => handleAnswer(word.id === correctWord.id)}
+                aria-label={`Answer: ${word.meaning}`}
               >
                 {word.meaning}
               </button>

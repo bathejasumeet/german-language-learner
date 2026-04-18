@@ -28,7 +28,7 @@ export const WordForm = ({ onWordAdded }) => {
   return (
     <form onSubmit={handleSubmit} className="word-form">
       <h2>Add New Word</h2>
-      {error && <div className="error">{error}</div>}
+      {error && <div className="error" role="alert" aria-live="assertive">{error}</div>}
       
       <div className="form-group">
         <label htmlFor="german">German Word:</label>
@@ -39,6 +39,9 @@ export const WordForm = ({ onWordAdded }) => {
           onChange={(e) => setGermanWord(e.target.value)}
           required
           disabled={loading}
+          aria-label="German word to add"
+          aria-required="true"
+          aria-invalid={error ? 'true' : 'false'}
         />
       </div>
 
@@ -51,10 +54,13 @@ export const WordForm = ({ onWordAdded }) => {
           onChange={(e) => setMeaning(e.target.value)}
           required
           disabled={loading}
+          aria-label="English meaning of the word"
+          aria-required="true"
+          aria-invalid={error ? 'true' : 'false'}
         />
       </div>
 
-      <button type="submit" disabled={loading}>
+      <button type="submit" disabled={loading} aria-busy={loading}>
         {loading ? 'Adding...' : 'Add Word'}
       </button>
     </form>

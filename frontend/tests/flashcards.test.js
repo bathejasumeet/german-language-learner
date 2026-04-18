@@ -5,13 +5,15 @@ import * as quizService from '../src/services/quiz';
 
 vi.mock('../src/services/quiz');
 
+const mockQuizService = vi.mocked(quizService);
+
 describe('FlashcardStudy Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('renders flashcard study component with select mode', async () => {
-    quizService.flashcardService = {
+    mockQuizService.flashcardService = {
       getAllFlashcards: vi.fn().mockResolvedValue({
         data: [{ id: 1, word_id: 1, word: { german_word: 'Apfel', meaning: 'Apple' } }],
       }),
@@ -22,7 +24,7 @@ describe('FlashcardStudy Component', () => {
   });
 
   it('allows selecting words for study', async () => {
-    quizService.flashcardService = {
+    mockQuizService.flashcardService = {
       getAllFlashcards: vi.fn().mockResolvedValue({
         data: [{ id: 1, word_id: 1, word: { german_word: 'Apfel', meaning: 'Apple' } }],
       }),

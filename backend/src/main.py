@@ -1,4 +1,5 @@
 import logging
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.database import engine, Base
@@ -10,9 +11,6 @@ from src.api.quiz import router as quiz_router
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Create database tables
-Base.metadata.create_all(bind=engine)
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -29,15 +27,32 @@ app.include_router(quiz_router)
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify allowed origins
+    allow_origins=["http://localhost:5173", "http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Create database tables on startup
+@app.on_event("startup")
+def startup():
+    try:
+        # Only create tables if not in test mode
+        if os.getenv("ENV", "development") != "test":
+            Base.metadata.create_all(bind=engine)
+            logger.info("Database tables created successfully")
+    except Exception as e:
+        logger.error(f"Failed to create database tables: {e}")
+
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 
 @app.get("/")
 async def root():
+    return {"message": "German Language Learning API"}
     """Root endpoint"""
     return {"message": "German Language Learning API"}
 

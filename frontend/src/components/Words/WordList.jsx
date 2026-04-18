@@ -36,8 +36,8 @@ export const WordList = ({ refresh }) => {
     }
   };
 
-  if (loading) return <div className="loading">Loading words...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (loading) return <div className="loading" role="status" aria-live="polite">Loading words...</div>;
+  if (error) return <div className="error" role="alert" aria-live="assertive">{error}</div>;
 
   return (
     <div className="word-list">
@@ -45,14 +45,14 @@ export const WordList = ({ refresh }) => {
       {words.length === 0 ? (
         <p className="no-words">No words added yet. Add your first word!</p>
       ) : (
-        <table>
+        <table role="table" summary="List of German vocabulary with practice statistics">
           <thead>
             <tr>
-              <th>German Word</th>
-              <th>Meaning</th>
-              <th>Times Practiced</th>
-              <th>Accuracy</th>
-              <th>Actions</th>
+              <th scope="col">German Word</th>
+              <th scope="col">Meaning</th>
+              <th scope="col">Times Practiced</th>
+              <th scope="col">Accuracy</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -66,6 +66,7 @@ export const WordList = ({ refresh }) => {
                   <button
                     onClick={() => handleDelete(word.id)}
                     className="delete-btn"
+                    aria-label={`Delete word: ${word.german_word}`}
                   >
                     Delete
                   </button>
