@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { vocabularyService } from '../services/vocabulary';
+import { vocabularyService } from '../../services/vocabulary';
 import './WordForm.css';
 
 export const WordForm = ({ onWordAdded }) => {

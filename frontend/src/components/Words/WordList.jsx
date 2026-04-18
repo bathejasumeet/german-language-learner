@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { vocabularyService } from '../services/vocabulary';
+import { vocabularyService } from '../../services/vocabulary';
 import './WordList.css';
 
 export const WordList = ({ refresh }) => {

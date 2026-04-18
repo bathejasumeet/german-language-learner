@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { WordForm } from './WordForm';
-import { WordList } from './WordList';
+import { WordForm } from '../components/Words/WordForm';
+import { WordList } from '../components/Words/WordList';
 import './Vocabulary.css';
 
 export const Vocabulary = () => {
