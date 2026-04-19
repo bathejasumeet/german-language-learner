@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { WordForm } from '../components/Words/WordForm';
-import { WordList } from '../components/Words/WordList';
 import './Vocabulary.css';
 
-export const Vocabulary = () => {
+export const Vocabulary = ({ onNavigateToWords }) => {
   const [refresh, setRefresh] = useState(false);
 
   const handleWordAdded = () => {
@@ -17,9 +16,28 @@ export const Vocabulary = () => {
         <div className="content">
           <div className="form-section">
             <WordForm onWordAdded={handleWordAdded} />
-          </div>
-          <div className="list-section">
-            <WordList refresh={refresh} />
+            
+            <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#f0f4ff', borderRadius: '0.5rem' }}>
+              <p style={{ margin: '0.5rem 0' }}>
+                📖 Once you've created your vocabulary, go to the <strong>Words</strong> tab to manage, edit, and browse your collection.
+              </p>
+              <button
+                onClick={onNavigateToWords}
+                style={{
+                  marginTop: '1rem',
+                  backgroundColor: '#2563eb',
+                  color: '#fff',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '0.375rem',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: '500'
+                }}
+              >
+                View All Words →
+              </button>
+            </div>
           </div>
         </div>
       </div>

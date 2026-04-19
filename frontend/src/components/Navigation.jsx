@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Vocabulary } from '../pages/Vocabulary';
+import { WordsTab } from '../pages/WordsTab';
 import { QuizComponent } from '../components/Quiz/QuizComponent';
 import { Statistics } from '../components/Quiz/Statistics';
 import { FlashcardStudy } from '../components/Flashcards/FlashcardStudy';
@@ -11,7 +12,9 @@ export const Navigation = () => {
   const renderPage = () => {
     switch (currentPage) {
       case 'vocabulary':
-        return <Vocabulary />;
+        return <Vocabulary onNavigateToWords={() => setCurrentPage('words')} />;
+      case 'words':
+        return <WordsTab onNavigateToVocab={() => setCurrentPage('vocabulary')} />;
       case 'flashcards':
         return <FlashcardStudy />;
       case 'quiz':
@@ -39,6 +42,17 @@ export const Navigation = () => {
               role="menuitem"
             >
               📚 Vocabulary
+            </button>
+          </li>
+          <li role="none">
+            <button
+              className={`nav-link ${currentPage === 'words' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('words')}
+              aria-current={currentPage === 'words' ? 'page' : undefined}
+              aria-label="Navigate to Words management section"
+              role="menuitem"
+            >
+              📖 Words
             </button>
           </li>
           <li role="none">

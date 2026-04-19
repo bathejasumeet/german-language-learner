@@ -15,7 +15,7 @@ export const vocabularyService = {
   createWord: (germanWord, meaning, exampleSentence) => {
     const payload = {
       german_word: germanWord,
-      meaning
+      meaning,
     };
     if (exampleSentence) {
       payload.example_sentence = exampleSentence;

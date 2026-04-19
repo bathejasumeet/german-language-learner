@@ -63,7 +63,9 @@ test.describe('German Language Learner - Full User Flow', () => {
       const meaningInput = page.locator(
         'input[aria-label="English meaning of the word"]'
       );
-      const exampleInput = page.locator('textarea[aria-label="Example sentence for the word"]');
+      const exampleInput = page.locator(
+        'textarea[aria-label="Example sentence for the word"]'
+      );
 
       await germanInput.fill('Hund');
       await meaningInput.fill('Dog');
@@ -88,7 +90,9 @@ test.describe('German Language Learner - Full User Flow', () => {
       // Navigate to vocabulary section
       await page.click('button:has-text("Vocabulary")');
 
-      const exampleInput = page.locator('textarea[aria-label="Example sentence for the word"]');
+      const exampleInput = page.locator(
+        'textarea[aria-label="Example sentence for the word"]'
+      );
 
       // Try to enter text longer than 500 characters
       const longText = 'A'.repeat(600);
