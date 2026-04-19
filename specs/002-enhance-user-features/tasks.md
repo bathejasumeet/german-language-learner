@@ -224,25 +224,30 @@ Phase 6 (Polish) ← Depends on desired user stories complete
 ### Task Dependencies Within Phases
 
 **Phase 2 Critical Sequence**:
+
 - T006-T007 (migrations) must run before T008-T009 (ORM models)
 - T008-T009 (ORM) must complete before T010-T012 (services use models)
 
 **Phase 3 (US1)** - Can parallelize:
+
 - T018-T019 (schemas) can run with T020-T025 (endpoints)
 - T026-T030 (frontend components) can run with backend work
 - T025 (backend test) and T031-T032 (frontend tests) only need previous tasks in their layer
 
 **Phase 4 (US2)** - Mostly independent:
+
 - T033-T035 (VocabularyManager) can run in parallel
 - T036-T040 (navigation) depends on VocabularyManager ready
 - Frontend changes are isolated
 
 **Phase 5 (US3)** - Backend/Frontend can parallelize:
+
 - T044-T055 (backend quiz) independent from T056-T069 (frontend quiz)
 
 ### Parallel Opportunities
 
 **Immediate Parallels After Phase 2**:
+
 ```
 Team Member A: Phase 3 (User Story 1)
 Team Member B: Phase 4 (User Story 2)
@@ -251,12 +256,14 @@ Team Member C: Phase 5 (User Story 3)
 ```
 
 **Within Each Phase - Tasks with [P] marker**:
+
 - Phase 1: T002, T003, T004, T005 can run in parallel
 - Phase 2: T010-T015, T016-T017 can run in parallel (different layers)
 - Phase 3: T018-T019, T024, T026-T027, T030 can run in parallel
 - Phase 5: T044-T046, T056-T057, T063 can run in parallel
 
 **Example Parallel Execution**:
+
 ```bash
 # After foundational complete
 Task T020 (backend: update POST endpoint)
@@ -271,6 +278,7 @@ Task T027 (frontend: update form submission)
 ## Parallel Example: Full Team Release
 
 ### Week 1: Foundation
+
 ```
 Monday: All hands - Phase 1 Setup (4 hours)
         Dev A: T001, Dev B: T002, Dev C: T003
@@ -282,14 +290,16 @@ Thursday: Phase 2 complete, ready for user stories
 ```
 
 ### Week 2: User Stories (Parallel)
+
 ```
 Dev A: Phase 3 (US1 - Example Sentences) - 6 hours
-Dev B: Phase 4 (US2 - Vocabulary Organization) - 5 hours  
+Dev B: Phase 4 (US2 - Vocabulary Organization) - 5 hours
 Dev C: Phase 5 (US3 - Multiple Choice Quiz) - 8 hours
 (All in parallel, daily standups on blockers)
 ```
 
 ### Week 3: Testing & Polish
+
 ```
 Monday-Wednesday: Phase 6 (Polish & Testing)
         T070-T079: Performance optimization

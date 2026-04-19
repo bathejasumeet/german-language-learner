@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Float, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from src.database import Base
 
@@ -11,6 +11,7 @@ class Word(Base):
     id = Column(Integer, primary_key=True, index=True)
     german_word = Column(String, unique=True, index=True, nullable=False)
     meaning = Column(String, nullable=False)
+    example_sentence = Column(String(500), nullable=True)  # NEW: Optional example sentence
     created_at = Column(DateTime, default=datetime.utcnow)
     times_practiced = Column(Integer, default=0)
     accuracy = Column(Float, default=0.0)  # Accuracy as percentage (0-100)
@@ -57,3 +58,17 @@ class Quiz(Base):
     total_questions = Column(Integer, nullable=False)
     correct_answers = Column(Integer, default=0)
     score = Column(Float, default=0.0)  # Score as percentage
+
+
+class QuizSession(Base):
+    """Model for enhanced quiz sessions with tracking"""
+    __tablename__ = "quiz_sessions"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    vocabulary_ids = Column(Text, nullable=False)  # JSON array of vocabulary IDs used in quiz
+    answers_json = Column(Text, nullable=False)    # JSON array of answer records
+    score = Column(Integer, nullable=False)         # Total correct answers
+    total_questions = Column(Integer, nullable=False)
+    duration_seconds = Column(Integer, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)

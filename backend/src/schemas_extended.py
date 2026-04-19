@@ -49,6 +49,89 @@ class Quiz(QuizBase):
         from_attributes = True
 
 
+# ============= Vocabulary Schemas (Enhanced) =============
+
+class VocabularyBase(BaseModel):
+    """Base schema for Vocabulary"""
+    german_word: str = Field(..., min_length=1, max_length=255)
+    meaning: str = Field(..., min_length=1, max_length=1024)
+    example_sentence: Optional[str] = Field(None, max_length=500)
+
+
+class Vocabulary(VocabularyBase):
+    """Schema for Vocabulary response with example sentence"""
+    id: int
+    created_at: datetime
+    times_practiced: int = 0
+    accuracy: float = 0.0
+    
+    class Config:
+        from_attributes = True
+
+
+# ============= Quiz Session Schemas =============
+
+class QuizSessionBase(BaseModel):
+    """Base schema for QuizSession"""
+    score: int = Field(ge=0)
+    total_questions: int = Field(ge=1, le=20)
+    duration_seconds: Optional[int] = Field(None, ge=0)
+
+
+class QuizSession(QuizSessionBase):
+    """Schema for QuizSession response"""
+    id: int
+    user_id: int
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+class QuizQuestion(BaseModel):
+    """Schema for QuizQuestion response"""
+    id: str
+    vocabulary_id: int
+    question: str
+    german_word: str
+    english_meaning: str
+    options: List[str]
+    correct_answer_index: int
+
+
+class QuizGenerateResponse(BaseModel):
+    """Schema for quiz generation response"""
+    quiz_id: str
+    total_questions: int
+    questions: List[QuizQuestion]
+
+
+class QuizAnswerSubmission(BaseModel):
+    """Schema for quiz answer submission"""
+    quiz_id: str
+    question_id: str
+    selected_option_index: int = Field(ge=0, le=3)
+
+
+class QuizAnswerFeedback(BaseModel):
+    """Schema for quiz answer feedback"""
+    is_correct: bool
+    correct_answer_index: int
+    correct_answer: str
+    explanation: Optional[str] = None
+
+
+class QuizScoreResponse(BaseModel):
+    """Schema for final quiz score"""
+    quiz_id: str
+    score: int
+    total_questions: int
+    percentage: float
+    duration_seconds: Optional[int] = None
+    results: List[dict] = []
+    statistics: Optional[dict] = None
+
+
 class ProgressBase(BaseModel):
     """Base schema for Progress"""
     word_id: int

@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "The application is not user friendly and is missing some features. Incorporate the following: The vocabulary manager currently shows add new word and meaning. It should also have an option to add an example sentence. Vocabulary list should not be on the vocabulary tab itself on landing - think of some other place. The quiz should give multiple options to select from, out of which one is the right answer."
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Add Example Sentences to Vocabulary (Priority: P1)
 
@@ -67,7 +67,7 @@ Users want a more structured quiz experience with multiple-choice questions. Ins
 - How does the quiz handle insufficient vocabulary for multiple-choice generation? (Minimum threshold: system should require at least 4 vocabulary entries to generate 4 distinct options)
 - What if the user navigates away during vocabulary creation? (Form state is either persisted or cleared on return)
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -90,7 +90,7 @@ Users want a more structured quiz experience with multiple-choice questions. Ins
 - **Quiz Question**: Represents a single quiz question derived from vocabulary entries. Attributes: selected vocabulary entry (correct answer), distractor options, user's answer selection, correctness status
 - **Quiz Session**: Represents a single quiz attempt. Attributes: vocabulary entries used, answers provided, score, duration, completion status
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
