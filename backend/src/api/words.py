@@ -16,7 +16,7 @@ async def create_word(word: WordCreate, db: Session = Depends(get_db)):
     """Create a new word in the vocabulary"""
     try:
         created_word = VocabularyService.create_word(
-            db, word.german_word, word.meaning
+            db, word.german_word, word.meaning, word.example_sentence
         )
         logger.info(f"Created word: {word.german_word}")
         return created_word
@@ -49,7 +49,7 @@ async def get_word(word_id: int, db: Session = Depends(get_db)):
 async def update_word(word_id: int, word: WordUpdate, db: Session = Depends(get_db)):
     """Update a word"""
     updated_word = VocabularyService.update_word(
-        db, word_id, word.german_word, word.meaning
+        db, word_id, word.german_word, word.meaning, word.example_sentence
     )
     if not updated_word:
         raise HTTPException(

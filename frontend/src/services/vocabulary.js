@@ -12,14 +12,30 @@ export const vocabularyService = {
 
   getWord: (wordId) => api.get(`/api/v1/words/${wordId}`),
 
-  createWord: (germanWord, meaning) =>
-    api.post('/api/v1/words/', { german_word: germanWord, meaning }),
-
-  updateWord: (wordId, germanWord, meaning) =>
-    api.put(`/api/v1/words/${wordId}`, {
+  createWord: (germanWord, meaning, exampleSentence) => {
+    const payload = {
       german_word: germanWord,
-      meaning,
-    }),
+      meaning
+    };
+    if (exampleSentence) {
+      payload.example_sentence = exampleSentence;
+    }
+    return api.post('/api/v1/words/', payload);
+  },
+
+  updateWord: (wordId, germanWord, meaning, exampleSentence) => {
+    const payload = {};
+    if (germanWord) {
+      payload.german_word = germanWord;
+    }
+    if (meaning) {
+      payload.meaning = meaning;
+    }
+    if (exampleSentence !== undefined) {
+      payload.example_sentence = exampleSentence;
+    }
+    return api.put(`/api/v1/words/${wordId}`, payload);
+  },
 
   deleteWord: (wordId) => api.delete(`/api/v1/words/${wordId}`),
 };

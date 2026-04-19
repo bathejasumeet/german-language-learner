@@ -54,6 +54,55 @@ test.describe('German Language Learner - Full User Flow', () => {
       await expect(page.locator('table')).toContainText('Cat');
     });
 
+    test('should add a new word with example sentence', async ({ page }) => {
+      // Navigate to vocabulary section
+      await page.click('button:has-text("Vocabulary")');
+
+      // Fill form with all fields including example sentence
+      const germanInput = page.locator('input[aria-label="German word to add"]');
+      const meaningInput = page.locator(
+        'input[aria-label="English meaning of the word"]'
+      );
+      const exampleInput = page.locator('textarea[aria-label="Example sentence for the word"]');
+
+      await germanInput.fill('Hund');
+      await meaningInput.fill('Dog');
+      await exampleInput.fill('Der Hund ist sehr freundlich und spielt gerne.');
+
+      // Verify character count is displayed
+      const charCounter = page.locator('text=/\\d+ \\/ 500 characters/');
+      await expect(charCounter).toBeVisible();
+
+      // Submit form
+      await page.click('button:has-text("Add Word")');
+
+      // Wait for success
+      await page.waitForLoadState('networkidle');
+
+      // Verify word appears in list
+      await expect(page.locator('table')).toContainText('Hund');
+      await expect(page.locator('table')).toContainText('Dog');
+    });
+
+    test('should enforce character limit on example sentence', async ({ page }) => {
+      // Navigate to vocabulary section
+      await page.click('button:has-text("Vocabulary")');
+
+      const exampleInput = page.locator('textarea[aria-label="Example sentence for the word"]');
+
+      // Try to enter text longer than 500 characters
+      const longText = 'A'.repeat(600);
+      await exampleInput.fill(longText);
+
+      // Verify that only 500 characters are allowed
+      const value = await exampleInput.inputValue();
+      expect(value.length).toBeLessThanOrEqual(500);
+
+      // Check character counter shows maximum
+      const charCounter = page.locator('text=/500 \\/ 500 characters/');
+      await expect(charCounter).toBeVisible();
+    });
+
     test('should display vocabulary list', async ({ page }) => {
       await page.click('button:has-text("Vocabulary")');
 

@@ -7,6 +7,7 @@ class WordBase(BaseModel):
     """Base schema for Word"""
     german_word: str = Field(..., min_length=1, max_length=255)
     meaning: str = Field(..., min_length=1, max_length=1024)
+    example_sentence: Optional[str] = Field(None, max_length=500)
 
 
 class WordCreate(WordBase):
@@ -18,6 +19,7 @@ class WordUpdate(BaseModel):
     """Schema for updating a word"""
     german_word: Optional[str] = Field(None, min_length=1, max_length=255)
     meaning: Optional[str] = Field(None, min_length=1, max_length=1024)
+    example_sentence: Optional[str] = Field(None, max_length=500)
 
 
 class Word(WordBase):
