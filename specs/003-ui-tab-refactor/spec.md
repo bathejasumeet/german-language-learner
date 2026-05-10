@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "Refactor and recreate a basic clutterless UI with five tabs : Vocabulary, Words, Flashcards, Quiz and statistics. No need to add any fancy features - make it minimalistic and user friendly."
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Navigate Between Learning Features (Priority: P1)
 
@@ -113,7 +113,7 @@ A user wants to see basic statistics about their learning progress (words learne
 - What happens on mobile devices with limited screen space? (Stack tabs vertically or use collapsible menu)
 - How does the UI handle very long German words or translations? (Text wrapping or truncation with tooltips)
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -138,7 +138,7 @@ A user wants to see basic statistics about their learning progress (words learne
 - **Quiz Interface**: Question presentation and answer collection interface
 - **Statistics Display**: Aggregated learning metrics and progress indicators
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
@@ -147,8 +147,8 @@ A user wants to see basic statistics about their learning progress (words learne
 - **SC-003**: All five tabs are clearly visible and accessible without scrolling
 - **SC-004**: 100% of UI elements have labels or are self-explanatory
 - **SC-005**: Page load time for any tab is under 1 second (once vocabulary is loaded)
-- **SC-006**: Users can complete a full vocabulary management workflow (add word, browse, edit, delete) without confusion
-- **SC-007**: Mobile viewport still shows all functionality without excessive scrolling (for screens 320px and up)
+- **SC-006**: Users can complete a full vocabulary management workflow (add word, browse, edit, delete) in under 3 minutes without requiring external help or documentation
+- **SC-007**: All five tabs and their content are accessible at 320px viewport width with no horizontal scroll; vertical scroll is permitted only for word lists exceeding 10 items
 
 ## Assumptions
 
@@ -160,3 +160,4 @@ A user wants to see basic statistics about their learning progress (words learne
 - Mobile-first approach is not required; desktop view is priority with responsive fallback
 - Current user authentication is already in place and users have accounts
 - Statistics only show basic counts and averages; no complex trend analysis
+- "Study streak" mentioned in US6 is out of scope; it is not returned by the current `/api/v1/quiz/stats/overall` endpoint and requires no backend changes to omit

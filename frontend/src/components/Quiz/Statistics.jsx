@@ -14,7 +14,6 @@ export const Statistics = () => {
   const fetchStatistics = async () => {
     setLoading(true);
     setError('');
-
     try {
       const response = await quizService.getUserStatistics();
       setStats(response.data);
@@ -26,49 +25,51 @@ export const Statistics = () => {
   };
 
   if (loading) {
-    return <div className="loading">Loading statistics...</div>;
+    return <div className="stats-status" role="status" aria-live="polite">Loading statistics...</div>;
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return <div className="stats-status stats-error" role="alert">{error}</div>;
   }
 
-  if (!stats) {
-    return <div className="no-data">No statistics available yet.</div>;
+  const isEmpty = !stats || (
+    stats.total_quizzes === 0 && stats.total_reviews === 0
+  );
+
+  if (isEmpty) {
+    return (
+      <div className="stats-empty">
+        <p>No statistics available yet — complete a quiz to see your progress.</p>
+      </div>
+    );
   }
 
   return (
     <div className="statistics">
-      <h2>Your Learning Statistics</h2>
-      
+      <h2>Statistics</h2>
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-label">Total Words</div>
-          <div className="stat-value">{stats.total_words}</div>
+          <span className="stat-label">Total Words</span>
+          <span className="stat-value">{stats.total_words}</span>
         </div>
-
         <div className="stat-card">
-          <div className="stat-label">Total Quizzes</div>
-          <div className="stat-value">{stats.total_quizzes}</div>
+          <span className="stat-label">Quizzes Taken</span>
+          <span className="stat-value">{stats.total_quizzes}</span>
         </div>
-
         <div className="stat-card">
-          <div className="stat-label">Average Quiz Score</div>
-          <div className="stat-value">{stats.average_quiz_score}%</div>
+          <span className="stat-label">Average Score</span>
+          <span className="stat-value">{stats.average_quiz_score}%</span>
         </div>
-
         <div className="stat-card">
-          <div className="stat-label">Total Reviews</div>
-          <div className="stat-value">{stats.total_reviews}</div>
+          <span className="stat-label">Total Reviews</span>
+          <span className="stat-value">{stats.total_reviews}</span>
         </div>
-
         <div className="stat-card">
-          <div className="stat-label">Overall Accuracy</div>
-          <div className="stat-value">{stats.overall_accuracy}%</div>
+          <span className="stat-label">Overall Accuracy</span>
+          <span className="stat-value">{stats.overall_accuracy}%</span>
         </div>
       </div>
-
-      <button onClick={fetchStatistics}>Refresh Statistics</button>
+      <button onClick={fetchStatistics} className="btn-secondary">Refresh</button>
     </div>
   );
 };

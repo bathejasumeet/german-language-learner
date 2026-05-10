@@ -1,65 +1,88 @@
 .word-form {
-  background: #f5f5f5;
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 500px;
-  margin: 20px 0;
+  max-width: 480px;
 }
 
-.word-form h2 {
-  margin-top: 0;
-  color: #333;
+.form-error {
+  background-color: #fef2f2;
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius);
+  margin-bottom: var(--spacing-md);
+  font-size: 0.875rem;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 5px;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: #555;
+  color: var(--color-text);
 }
 
-.form-group input {
+.optional {
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.form-group input,
+.form-group textarea {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background-color: var(--color-bg);
   box-sizing: border-box;
 }
 
-.form-group input:disabled {
-  background-color: #e8e8e8;
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -1px;
+  border-color: var(--color-primary);
+}
+
+.form-group input:disabled,
+.form-group textarea:disabled {
+  background-color: var(--color-surface);
   cursor: not-allowed;
 }
 
-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.char-count {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  align-self: flex-end;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: var(--spacing-sm) var(--spacing-lg);
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
   font-weight: 500;
+  cursor: pointer;
 }
 
-button:hover:not(:disabled) {
-  background-color: #0056b3;
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
 }
 
-button:disabled {
-  background-color: #ccc;
+.btn-primary:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
-}
-
-.error {
-  color: #d32f2f;
-  background: #ffebee;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 15px;
 }

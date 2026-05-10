@@ -4,56 +4,35 @@ import { flashcardService } from '../../services/quiz';
 import './FlashcardStudy.css';
 
 export const FlashcardStudy = () => {
-  const [words, setWords] = useState([]);
-  const [selectedWords, setSelectedWords] = useState([]);
   const [flashcards, setFlashcards] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [studyMode, setStudyMode] = useState('select'); // select, study
+  const [studyMode, setStudyMode] = useState('study');
 
   useEffect(() => {
-    fetchWords();
+    loadFlashcards();
   }, []);
 
-  const fetchWords = async () => {
-    setLoading(true);
-    try {
-      const response = await vocabularyService.getAllWords(0, 1000);
-      setWords(response.data);
-    } catch (err) {
-      setError('Failed to load words');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleWordSelection = (wordId) => {
-    if (selectedWords.includes(wordId)) {
-      setSelectedWords(selectedWords.filter((id) => id !== wordId));
-    } else {
-      setSelectedWords([...selectedWords, wordId]);
-    }
-  };
-
-  const handleGenerateFlashcards = async () => {
-    if (selectedWords.length === 0) {
-      setError('Select at least one word');
-      return;
-    }
-
+  const loadFlashcards = async () => {
     setLoading(true);
     setError('');
-
     try {
-      const response = await flashcardService.generateFlashcards(selectedWords);
+      const wordsResponse = await vocabularyService.getAllWords(0, 1000);
+      const wordIds = wordsResponse.data.map((w) => w.id);
+      if (wordIds.length === 0) {
+        setFlashcards([]);
+        setLoading(false);
+        return;
+      }
+      const response = await flashcardService.generateFlashcards(wordIds);
       setFlashcards(response.data);
       setCurrentIndex(0);
       setIsFlipped(false);
       setStudyMode('study');
     } catch (err) {
-      setError('Failed to generate flashcards');
+      setError('Failed to load flashcards. Make sure you have words added.');
     } finally {
       setLoading(false);
     }
@@ -63,10 +42,10 @@ export const FlashcardStudy = () => {
     const flashcard = flashcards[currentIndex];
     try {
       await flashcardService.markFlashcardKnown(flashcard.id);
-      handleNextCard();
     } catch (err) {
-      setError('Failed to mark flashcard');
+      // silently skip if marking fails
     }
+    handleNextCard();
   };
 
   const handleNextCard = () => {
@@ -85,103 +64,18 @@ export const FlashcardStudy = () => {
     }
   };
 
-  if (loading && studyMode === 'select') {
-    return <div className="loading" role="status" aria-live="polite">Loading words...</div>;
+  if (loading) {
+    return <div className="flashcard-status" role="status" aria-live="polite">Loading flashcards...</div>;
   }
 
-  if (studyMode === 'select') {
-    return (
-      <div className="flashcard-select">
-        <h2>Select Words for Flashcards</h2>
-        {error && <div className="error" role="alert" aria-live="assertive">{error}</div>}
-        
-        <div className="words-grid" role="group" aria-label="Select words for flashcard study">
-          {words.map((word) => (
-            <div
-              key={word.id}
-              className={`word-card ${selectedWords.includes(word.id) ? 'selected' : ''}`}
-              onClick={() => handleWordSelection(word.id)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleWordSelection(word.id);
-                }
-              }}
-              role="checkbox"
-              aria-checked={selectedWords.includes(word.id)}
-              aria-label={`${word.german_word} - ${word.meaning}`}
-              tabIndex="0"
-            >
-              <div className="german">{word.german_word}</div>
-              <div className="meaning">{word.meaning}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="actions">
-          <p aria-live="polite">Selected: {selectedWords.length} words</p>
-          <button
-            onClick={handleGenerateFlashcards}
-            disabled={selectedWords.length === 0 || loading}
-            aria-label={`Generate flashcards from ${selectedWords.length} selected words`}
-            aria-busy={loading}
-          >
-            {loading ? 'Generating...' : 'Generate Flashcards'}
-          </button>
-        </div>
-      </div>
-    );
+  if (error) {
+    return <div className="flashcard-status flashcard-error" role="alert">{error}</div>;
   }
 
-  if (studyMode === 'study') {
-    const flashcard = flashcards[currentIndex];
-    const word = flashcard.word;
-
+  if (flashcards.length === 0) {
     return (
-      <div className="flashcard-study">
-        <div className="progress-bar">
-          <div
-            className="progress-fill"
-            style={{
-              width: `${((currentIndex + 1) / flashcards.length) * 100}%`,
-            }}
-          ></div>
-        </div>
-
-        <p className="progress-text">
-          Card {currentIndex + 1} of {flashcards.length}
-        </p>
-
-        <div
-          className={`flashcard ${isFlipped ? 'flipped' : ''}`}
-          onClick={() => setIsFlipped(!isFlipped)}
-        >
-          <div className="flashcard-front">
-            <div className="label">German</div>
-            <div className="content">{word.german_word}</div>
-          </div>
-          <div className="flashcard-back">
-            <div className="label">English</div>
-            <div className="content">{word.meaning}</div>
-          </div>
-        </div>
-
-        <p className="click-hint">Click card to flip</p>
-
-        <div className="buttons">
-          <button onClick={handlePrevCard} disabled={currentIndex === 0}>
-            ← Previous
-          </button>
-          <button
-            onClick={handleMarkKnown}
-            className="known-btn"
-          >
-            I Know This
-          </button>
-          <button onClick={handleNextCard} disabled={currentIndex === flashcards.length - 1}>
-            Next →
-          </button>
-        </div>
+      <div className="flashcard-status">
+        No words available. Add words in the Vocabulary tab first.
       </div>
     );
   }
@@ -189,10 +83,56 @@ export const FlashcardStudy = () => {
   if (studyMode === 'complete') {
     return (
       <div className="flashcard-complete">
-        <h2>Session Complete! 🎉</h2>
-        <p>You studied {flashcards.length} flashcards.</p>
-        <button onClick={() => setStudyMode('select')}>Study More Words</button>
+        <h2>Session complete</h2>
+        <p>You studied {flashcards.length} flashcard{flashcards.length !== 1 ? 's' : ''}.</p>
+        <button className="btn-primary" onClick={loadFlashcards}>Study Again</button>
       </div>
     );
   }
+
+  const flashcard = flashcards[currentIndex];
+  const word = flashcard.word;
+
+  return (
+    <div className="flashcard-study">
+      <div className="flashcard-progress">
+        <div
+          className="flashcard-progress-fill"
+          style={{ width: `${((currentIndex + 1) / flashcards.length) * 100}%` }}
+        />
+      </div>
+      <p className="flashcard-counter">{currentIndex + 1} / {flashcards.length}</p>
+
+      <button
+        className={`flashcard-card${isFlipped ? ' flipped' : ''}`}
+        onClick={() => setIsFlipped(!isFlipped)}
+        aria-label={isFlipped ? `Back: ${word.meaning}` : `Front: ${word.german_word}. Click to reveal meaning.`}
+      >
+        <div className="flashcard-face flashcard-front">
+          <span className="flashcard-label">German</span>
+          <span className="flashcard-word">{word.german_word}</span>
+          <span className="flashcard-hint">tap to flip</span>
+        </div>
+        <div className="flashcard-face flashcard-back">
+          <span className="flashcard-label">English</span>
+          <span className="flashcard-word">{word.meaning}</span>
+          {word.example_sentence && (
+            <span className="flashcard-example">{word.example_sentence}</span>
+          )}
+        </div>
+      </button>
+
+      <div className="flashcard-actions">
+        <button onClick={handlePrevCard} disabled={currentIndex === 0} className="btn-secondary">
+          Previous
+        </button>
+        <button onClick={handleMarkKnown} className="btn-known">
+          Know it
+        </button>
+        <button onClick={handleNextCard} disabled={currentIndex === flashcards.length - 1} className="btn-secondary">
+          Next
+        </button>
+      </div>
+    </div>
+  );
 };

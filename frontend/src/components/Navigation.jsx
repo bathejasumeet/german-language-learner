@@ -6,92 +6,46 @@ import { Statistics } from '../components/Quiz/Statistics';
 import { FlashcardStudy } from '../components/Flashcards/FlashcardStudy';
 import './Navigation.css';
 
+const TABS = [
+  { id: 'vocabulary', label: 'Vocabulary' },
+  { id: 'words',      label: 'Words' },
+  { id: 'flashcards', label: 'Flashcards' },
+  { id: 'quiz',       label: 'Quiz' },
+  { id: 'statistics', label: 'Statistics' },
+];
+
 export const Navigation = () => {
   const [currentPage, setCurrentPage] = useState('vocabulary');
 
   const renderPage = () => {
     switch (currentPage) {
-      case 'vocabulary':
-        return <Vocabulary onNavigateToWords={() => setCurrentPage('words')} />;
-      case 'words':
-        return <WordsTab onNavigateToVocab={() => setCurrentPage('vocabulary')} />;
-      case 'flashcards':
-        return <FlashcardStudy />;
-      case 'quiz':
-        return <QuizComponent />;
-      case 'statistics':
-        return <Statistics />;
-      default:
-        return <Vocabulary />;
+      case 'vocabulary':  return <Vocabulary />;
+      case 'words':       return <WordsTab />;
+      case 'flashcards':  return <FlashcardStudy />;
+      case 'quiz':        return <QuizComponent />;
+      case 'statistics':  return <Statistics />;
+      default:            return <Vocabulary />;
     }
   };
 
   return (
-    <div className="app-container">
-      <nav className="navbar" role="navigation" aria-label="Main navigation">
-        <div className="navbar-brand">
-          <h1>German Language Learner</h1>
-        </div>
-        <ul className="navbar-nav" role="menubar">
-          <li role="none">
+    <div className="app">
+      <header className="site-header">
+        <span className="site-title">German Learner</span>
+        <nav className="tab-nav" role="navigation" aria-label="Main navigation">
+          {TABS.map(({ id, label }) => (
             <button
-              className={`nav-link ${currentPage === 'vocabulary' ? 'active' : ''}`}
-              onClick={() => setCurrentPage('vocabulary')}
-              aria-current={currentPage === 'vocabulary' ? 'page' : undefined}
-              aria-label="Navigate to Vocabulary section"
-              role="menuitem"
+              key={id}
+              className={`tab-btn${currentPage === id ? ' active' : ''}`}
+              onClick={() => setCurrentPage(id)}
+              aria-current={currentPage === id ? 'page' : undefined}
             >
-              📚 Vocabulary
+              {label}
             </button>
-          </li>
-          <li role="none">
-            <button
-              className={`nav-link ${currentPage === 'words' ? 'active' : ''}`}
-              onClick={() => setCurrentPage('words')}
-              aria-current={currentPage === 'words' ? 'page' : undefined}
-              aria-label="Navigate to Words management section"
-              role="menuitem"
-            >
-              📖 Words
-            </button>
-          </li>
-          <li role="none">
-            <button
-              className={`nav-link ${currentPage === 'flashcards' ? 'active' : ''}`}
-              onClick={() => setCurrentPage('flashcards')}
-              aria-current={currentPage === 'flashcards' ? 'page' : undefined}
-              aria-label="Navigate to Flashcards section"
-              role="menuitem"
-            >
-              🃏 Flashcards
-            </button>
-          </li>
-          <li role="none">
-            <button
-              className={`nav-link ${currentPage === 'quiz' ? 'active' : ''}`}
-              onClick={() => setCurrentPage('quiz')}
-              aria-current={currentPage === 'quiz' ? 'page' : undefined}
-              aria-label="Navigate to Quiz section"
-              role="menuitem"
-            >
-              ✅ Quiz
-            </button>
-          </li>
-          <li role="none">
-            <button
-              className={`nav-link ${currentPage === 'statistics' ? 'active' : ''}`}
-              onClick={() => setCurrentPage('statistics')}
-              aria-current={currentPage === 'statistics' ? 'page' : undefined}
-              aria-label="Navigate to Statistics section"
-              role="menuitem"
-            >
-              📊 Statistics
-            </button>
-          </li>
-        </ul>
-      </nav>
-
-      <main className="main-content" role="main">
+          ))}
+        </nav>
+      </header>
+      <main className="page-content" role="main">
         {renderPage()}
       </main>
     </div>

@@ -1,63 +1,67 @@
 .word-list {
-  padding: 20px;
+  padding: var(--spacing-md) 0;
 }
 
 .word-list h2 {
-  color: #333;
-  margin-bottom: 20px;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-lg);
+  font-size: 1.1rem;
 }
 
 .word-list table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
+  background: var(--color-bg);
 }
 
 .word-list th {
-  background-color: #007bff;
-  color: white;
-  padding: 12px;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  padding: var(--spacing-sm) var(--spacing-md);
   text-align: left;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .word-list td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.9rem;
 }
 
 .word-list tbody tr:hover {
-  background-color: #f8f9fa;
+  background-color: var(--color-surface);
 }
 
 .delete-btn {
-  background-color: #dc3545;
-  color: white;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
+  background: none;
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
+  padding: 2px 8px;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
   cursor: pointer;
-  font-size: 12px;
 }
 
 .delete-btn:hover {
-  background-color: #c82333;
+  background-color: var(--color-danger);
+  color: #fff;
 }
 
 .no-words {
   text-align: center;
-  color: #999;
-  padding: 40px 20px;
+  color: var(--color-text-muted);
+  padding: var(--spacing-xl) var(--spacing-md);
 }
 
 .loading,
 .error {
   text-align: center;
-  padding: 20px;
-  font-size: 14px;
+  padding: var(--spacing-lg);
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
 }
 
 .error {

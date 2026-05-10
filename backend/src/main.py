@@ -3,7 +3,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.database import engine, Base
-from src.models import Word, Flashcard, Progress, Quiz
+from src.models import Word, Flashcard, Progress, Quiz, User, QuizSession
 from src.api.words import router as words_router
 from src.api.flashcards import router as flashcards_router
 from src.api.quiz import router as quiz_router

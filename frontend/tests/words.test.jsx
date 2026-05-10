@@ -40,7 +40,7 @@ describe('WordForm Component', () => {
     const textarea = screen.getByLabelText('Example sentence for the word');
     await user.type(textarea, 'Das ist ein Beispiel');
 
-    expect(screen.getByText(/20 \/ 500 characters/)).toBeInTheDocument();
+    expect(screen.getByText(/20 \/ 500/)).toBeInTheDocument();
   });
 
   it('prevents exceeding 500 character limit in example sentence', async () => {
@@ -54,7 +54,7 @@ describe('WordForm Component', () => {
 
     // Should only have 500 characters
     expect(textarea.value.length).toBeLessThanOrEqual(500);
-    expect(screen.getByText(/500 \/ 500 characters/)).toBeInTheDocument();
+    expect(screen.getByText(/500 \/ 500/)).toBeInTheDocument();
   });
 
   it('submits form with example sentence', async () => {

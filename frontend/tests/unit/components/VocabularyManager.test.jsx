@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { VocabularyManager } from '../../src/components/VocabularyManager';
-import { vocabularyService } from '../../src/services/vocabulary';
+import { VocabularyManager } from '../../../src/components/VocabularyManager';
+import { vocabularyService } from '../../../src/services/vocabulary';
 
-vi.mock('../../src/services/vocabulary');
+vi.mock('../../../src/services/vocabulary');
 
 describe('VocabularyManager Component', () => {
   const mockWords = [
@@ -36,13 +36,15 @@ describe('VocabularyManager Component', () => {
   });
 
   it('renders vocabulary manager title', async () => {
-    render(<VocabularyManager onEditWord={() => {}} onNavigateToVocab={() => {}} />);
+    render(<VocabularyManager onEditWord={() => {}} />);
 
-    expect(screen.getByText('Manage Vocabulary')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Manage Vocabulary')).toBeInTheDocument();
+    });
   });
 
   it('displays vocabulary list with all words', async () => {
-    render(<VocabularyManager onEditWord={() => {}} onNavigateToVocab={() => {}} />);
+    render(<VocabularyManager onEditWord={() => {}} />);
 
     await waitFor(() => {
       expect(screen.getByText('Wasser')).toBeInTheDocument();
@@ -55,7 +57,7 @@ describe('VocabularyManager Component', () => {
   });
 
   it('displays example sentences when present', async () => {
-    render(<VocabularyManager onEditWord={() => {}} onNavigateToVocab={() => {}} />);
+    render(<VocabularyManager onEditWord={() => {}} />);
 
     await waitFor(() => {
       expect(screen.getByText('Das Wasser ist kalt.')).toBeInTheDocument();
@@ -65,9 +67,9 @@ describe('VocabularyManager Component', () => {
 
   it('provides search functionality', async () => {
     const user = userEvent.setup();
-    render(<VocabularyManager onEditWord={() => {}} onNavigateToVocab={() => {}} />);
+    render(<VocabularyManager onEditWord={() => {}} />);
 
-    const searchInput = screen.getByPlaceholderText(/Search by German word or meaning/);
+    const searchInput = await screen.findByPlaceholderText(/Search by German word or meaning/);
 
     await user.type(searchInput, 'Wasser');
 
@@ -79,9 +81,9 @@ describe('VocabularyManager Component', () => {
 
   it('filters by English meaning', async () => {
     const user = userEvent.setup();
-    render(<VocabularyManager onEditWord={() => {}} onNavigateToVocab={() => {}} />);
+    render(<VocabularyManager onEditWord={() => {}} />);
 
-    const searchInput = screen.getByPlaceholderText(/Search by German word or meaning/);
+    const searchInput = await screen.findByPlaceholderText(/Search by German word or meaning/);
 
     await user.type(searchInput, 'Dog');
 
@@ -92,7 +94,7 @@ describe('VocabularyManager Component', () => {
   });
 
   it('displays Edit and Delete buttons for each word', async () => {
-    render(<VocabularyManager onEditWord={() => {}} onNavigateToVocab={() => {}} />);
+    render(<VocabularyManager onEditWord={() => {}} />);
 
     await waitFor(() => {
       const editButtons = screen.getAllByText('Edit');
@@ -105,7 +107,7 @@ describe('VocabularyManager Component', () => {
 
   it('allows editing a word', async () => {
     const user = userEvent.setup();
-    render(<VocabularyManager onEditWord={() => {}} onNavigateToVocab={() => {}} />);
+    render(<VocabularyManager onEditWord={() => {}} />);
 
     await waitFor(() => {
       expect(screen.getByText('Wasser')).toBeInTheDocument();
@@ -119,39 +121,13 @@ describe('VocabularyManager Component', () => {
     expect(inputs.length).toBeGreaterThan(0);
   });
 
-  it('shows Create New Word button', async () => {
-    const onNavigateToVocab = vi.fn();
-    render(
-      <VocabularyManager onEditWord={() => {}} onNavigateToVocab={onNavigateToVocab} />
-    );
-
-    const createButton = screen.getByText('+ Create New Word');
-    expect(createButton).toBeInTheDocument();
-  });
-
-  it('calls onNavigateToVocab when Create New Word is clicked', async () => {
-    const user = userEvent.setup();
-    const onNavigateToVocab = vi.fn();
-
-    render(
-      <VocabularyManager onEditWord={() => {}} onNavigateToVocab={onNavigateToVocab} />
-    );
-
-    const createButton = screen.getByText('+ Create New Word');
-    await user.click(createButton);
-
-    expect(onNavigateToVocab).toHaveBeenCalled();
-  });
-
   it('shows loading state while fetching words', () => {
     vocabularyService.getAllWords.mockImplementation(
       () =>
         new Promise((resolve) => setTimeout(() => resolve({ data: mockWords }), 100))
     );
 
-    const { rerender } = render(
-      <VocabularyManager onEditWord={() => {}} onNavigateToVocab={() => {}} />
-    );
+    render(<VocabularyManager onEditWord={() => {}} />);
 
     expect(screen.getByText('Loading vocabulary...')).toBeInTheDocument();
   });
@@ -166,7 +142,7 @@ describe('VocabularyManager Component', () => {
 
     vocabularyService.getAllWords.mockResolvedValue({ data: manyWords });
 
-    render(<VocabularyManager onEditWord={() => {}} onNavigateToVocab={() => {}} />);
+    render(<VocabularyManager onEditWord={() => {}} />);
 
     await waitFor(() => {
       expect(screen.getByText(/Page 1 of 2/)).toBeInTheDocument();
@@ -182,9 +158,9 @@ describe('VocabularyManager Component', () => {
 
   it('shows empty state message when no words match search', async () => {
     const user = userEvent.setup();
-    render(<VocabularyManager onEditWord={() => {}} onNavigateToVocab={() => {}} />);
+    render(<VocabularyManager onEditWord={() => {}} />);
 
-    const searchInput = screen.getByPlaceholderText(/Search by German word or meaning/);
+    const searchInput = await screen.findByPlaceholderText(/Search by German word or meaning/);
     await user.type(searchInput, 'nonexistent');
 
     await waitFor(() => {

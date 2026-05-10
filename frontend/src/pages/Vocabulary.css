@@ -1,29 +1,8 @@
 .vocabulary-page {
-  min-height: 100vh;
-  background-color: #f9f9f9;
-  padding: 20px 0;
+  padding: var(--spacing-lg) 0;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.vocabulary-page h1 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 30px;
-}
-
-.content {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 20px;
-}
-
-@media (max-width: 768px) {
-  .content {
-    grid-template-columns: 1fr;
-  }
+.vocabulary-page h2 {
+  margin-bottom: var(--spacing-lg);
+  font-size: 1.25rem;
 }

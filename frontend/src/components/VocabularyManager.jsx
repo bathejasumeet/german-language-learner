@@ -3,7 +3,7 @@ import { vocabularyService } from '../services/vocabulary';
 import { colors } from '../services/colors';
 import './VocabularyManager.css';
 
-export const VocabularyManager = ({ onEditWord, onNavigateToVocab }) => {
+export const VocabularyManager = ({ onEditWord }) => {
   const [words, setWords] = useState([]);
   const [filteredWords, setFilteredWords] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -213,19 +213,7 @@ export const VocabularyManager = ({ onEditWord, onNavigateToVocab }) => {
 
   return (
     <div className="vocabulary-manager">
-      <div style={headerStyle}>
-        <h2 style={titleStyle}>Manage Vocabulary</h2>
-        <button
-          onClick={onNavigateToVocab}
-          style={{
-            ...successButtonStyle,
-            marginRight: 0
-          }}
-        >
-          + Create New Word
-        </button>
-      </div>
-
+      <h2 style={titleStyle}>Manage Vocabulary</h2>
       {error && (
         <div style={{ color: colors.ERROR, marginBottom: '1rem' }}>
           {error}

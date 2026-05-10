@@ -4,6 +4,19 @@ from sqlalchemy.orm import relationship
 from src.database import Base
 
 
+class User(Base):
+    """Model for user accounts"""
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    quiz_sessions = relationship("QuizSession", back_populates="user", cascade="all, delete-orphan")
+
+
 class Word(Base):
     """Model for German words in the vocabulary database"""
     __tablename__ = "words"
@@ -72,3 +85,6 @@ class QuizSession(Base):
     total_questions = Column(Integer, nullable=False)
     duration_seconds = Column(Integer, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    user = relationship("User", back_populates="quiz_sessions")

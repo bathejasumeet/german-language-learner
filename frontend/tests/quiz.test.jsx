@@ -13,12 +13,13 @@ describe('QuizComponent', () => {
     vi.clearAllMocks();
   });
 
-  it('displays quiz start screen', () => {
+  it('displays quiz start screen', async () => {
     vocabularyService.getAllWords = vi.fn().mockResolvedValue({
       data: [{ id: 1, german_word: 'Apfel', meaning: 'Apple' }],
     });
 
     render(<QuizComponent />);
+    await screen.findByText(/German Language Quiz/i);
     expect(screen.getByText(/German Language Quiz/i)).toBeDefined();
   });
 
@@ -86,7 +87,7 @@ describe('Statistics Component', () => {
     };
 
     render(<Statistics />);
-    expect(screen.getByText(/Your Learning Statistics/i)).toBeDefined();
+    expect(screen.getByText(/Statistics/i)).toBeDefined();
   });
 
   it('displays stat cards for each metric', async () => {
@@ -103,6 +104,7 @@ describe('Statistics Component', () => {
     };
 
     render(<Statistics />);
+    await screen.findByText(/25/);
     expect(screen.getByText(/25/)).toBeDefined();
   });
 

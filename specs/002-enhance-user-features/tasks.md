@@ -18,11 +18,11 @@
 
 **Purpose**: Establish project structure and tooling
 
-- [ ] T001 Create Alembic migration directory structure in backend/ with version tracking
-- [ ] T002 [P] Setup database migration script template for example_sentence column addition in backend/alembic/versions/
-- [ ] T003 [P] Verify pytest configuration in backend/pyproject.toml includes test discovery for tests/ directory
-- [ ] T004 [P] Verify frontend build and test tooling in frontend/package.json (vite, vitest available)
-- [ ] T005 [P] Create colors utility file structure at frontend/src/services/colors.js (placeholder)
+- [x] T001 Create Alembic migration directory structure in backend/ with version tracking
+- [x] T002 [P] Setup database migration script template for example_sentence column addition in backend/alembic/versions/
+- [x] T003 [P] Verify pytest configuration in backend/pyproject.toml includes test discovery for tests/ directory
+- [x] T004 [P] Verify frontend build and test tooling in frontend/package.json (vite, vitest available)
+- [x] T005 [P] Create colors utility file structure at frontend/src/services/colors.js (placeholder)
 
 ---
 
@@ -32,27 +32,27 @@
 
 ### Database & ORM Layer
 
-- [ ] T006 Create and run Alembic migration to add `example_sentence VARCHAR(500)` column to vocabulary table in backend/alembic/versions/add_example_sentence.py
-- [ ] T007 Create and run Alembic migration to create quiz_sessions table in backend/alembic/versions/create_quiz_sessions.py
-- [ ] T008 Update Vocabulary ORM model in backend/src/models/models.py with `example_sentence: Mapped[Optional[str]]` field
-- [ ] T009 Create QuizSession ORM model in backend/src/models/models.py with user_id, vocabulary_ids, answers_json, score, total_questions, duration_seconds fields
+- [x] T006 Create and run Alembic migration to add `example_sentence VARCHAR(500)` column to vocabulary table in backend/alembic/versions/add_example_sentence.py
+- [x] T007 Create and run Alembic migration to create quiz_sessions table in backend/alembic/versions/create_quiz_sessions.py
+- [x] T008 Update Vocabulary ORM model in backend/src/models/models.py with `example_sentence: Mapped[Optional[str]]` field
+- [x] T009 Create QuizSession ORM model in backend/src/models/models.py with user_id, vocabulary_ids, answers_json, score, total_questions, duration_seconds fields
 
 ### Backend Services Foundation
 
-- [ ] T010 Update vocabulary service in backend/src/services/vocabulary.py to handle example_sentence parameter in create/update functions
-- [ ] T011 Create quiz service in backend/src/services/quiz.py with base quiz generation logic and distractor selection algorithm
-- [ ] T012 Add validation logic in quiz service: require minimum 4 vocabulary entries to generate quiz (backend/src/services/quiz.py)
+- [x] T010 Update vocabulary service in backend/src/services/vocabulary.py to handle example_sentence parameter in create/update functions
+- [x] T011 Create quiz service in backend/src/services/quiz.py with base quiz generation logic and distractor selection algorithm
+- [x] T012 Add validation logic in quiz service: require minimum 4 vocabulary entries to generate quiz (backend/src/services/quiz.py)
 
 ### API Schemas & Responses
 
-- [ ] T013 Create response schema in backend/src/schemas_extended.py for Vocabulary with example_sentence field
-- [ ] T014 Create response schema in backend/src/schemas_extended.py for QuizSession with score, total_questions, duration_seconds
-- [ ] T015 [P] Create QuizQuestion schema in backend/src/schemas.py with id, vocabulary_id, question, options, correct_answer_index fields
+- [x] T013 Create response schema in backend/src/schemas_extended.py for Vocabulary with example_sentence field
+- [x] T014 Create response schema in backend/src/schemas_extended.py for QuizSession with score, total_questions, duration_seconds
+- [x] T015 [P] Create QuizQuestion schema in backend/src/schemas.py with id, vocabulary_id, question, options, correct_answer_index fields
 
 ### Frontend Foundation
 
-- [ ] T016 Create centralized colors utility in frontend/src/services/colors.js exporting color constants (PRIMARY, SECONDARY, SUCCESS, ERROR, NEUTRAL, BACKGROUND, TEXT)
-- [ ] T017 Create navigation state management structure in frontend/src/pages/Dashboard.jsx to support multiple tabs (Vocabulary, Words, Quiz, Flashcards)
+- [x] T016 Create centralized colors utility in frontend/src/services/colors.js exporting color constants (PRIMARY, SECONDARY, SUCCESS, ERROR, NEUTRAL, BACKGROUND, TEXT)
+- [x] T017 Create navigation state management structure in frontend/src/pages/Dashboard.jsx to support multiple tabs (Vocabulary, Words, Quiz, Flashcards)
 
 **✅ CHECKPOINT: Foundation complete - User story implementation can begin**
 
@@ -66,24 +66,24 @@
 
 ### Backend Implementation for US1
 
-- [ ] T018 [P] [US1] Add example_sentence field to POST vocabulary request schema in backend/src/schemas.py (VocabularyCreate)
-- [ ] T019 [P] [US1] Add example_sentence field to PUT vocabulary response schema in backend/src/schemas.py (VocabularyUpdate)
-- [ ] T020 [US1] Update POST /api/words endpoint in backend/src/api/words.py to accept and persist example_sentence (calls vocabulary service create)
-- [ ] T021 [US1] Update PUT /api/words/{id} endpoint in backend/src/api/words.py to update example_sentence field
-- [ ] T022 [US1] Update GET /api/words endpoint response in backend/src/api/words.py to include example_sentence in vocabulary list
-- [ ] T023 [US1] Update GET /api/words/{id} endpoint response in backend/src/api/words.py to include example_sentence in single entry response
-- [ ] T024 [P] [US1] Add character validation in backend/src/services/vocabulary.py (max 500 chars for example_sentence)
-- [ ] T025 [US1] Write integration test for vocabulary CRUD with example_sentence in backend/tests/integration/test_words.py
+- [x] T018 [P] [US1] Add example_sentence field to POST vocabulary request schema in backend/src/schemas.py (VocabularyCreate)
+- [x] T019 [P] [US1] Add example_sentence field to PUT vocabulary response schema in backend/src/schemas.py (VocabularyUpdate)
+- [x] T020 [US1] Update POST /api/words endpoint in backend/src/api/words.py to accept and persist example_sentence (calls vocabulary service create)
+- [x] T021 [US1] Update PUT /api/words/{id} endpoint in backend/src/api/words.py to update example_sentence field
+- [x] T022 [US1] Update GET /api/words endpoint response in backend/src/api/words.py to include example_sentence in vocabulary list
+- [x] T023 [US1] Update GET /api/words/{id} endpoint response in backend/src/api/words.py to include example_sentence in single entry response
+- [x] T024 [P] [US1] Add character validation in backend/src/services/vocabulary.py (max 500 chars for example_sentence)
+- [x] T025 [US1] Write integration test for vocabulary CRUD with example_sentence in backend/tests/integration/test_words.py
 
 ### Frontend Implementation for US1
 
-- [ ] T026 [P] [US1] Create example_sentence input field in VocabularyForm component (frontend/src/components/VocabularyForm.jsx) with max 500 char counter
-- [ ] T027 [P] [US1] Update VocabularyForm submission to send example_sentence in POST/PUT request to backend API (frontend/src/components/VocabularyForm.jsx)
-- [ ] T028 [US1] Update vocabularyService.js to include example_sentence in createVocabulary() call (frontend/src/services/vocabularyService.js)
-- [ ] T029 [US1] Update vocabularyService.js to include example_sentence in updateVocabulary() call (frontend/src/services/vocabularyService.js)
-- [ ] T030 [P] [US1] Apply colors from colors.js to VocabularyForm inputs and labels (frontend/src/components/VocabularyForm.jsx)
-- [ ] T031 [US1] Write unit test for VocabularyForm component rendering example sentence field (frontend/tests/unit/components/VocabularyForm.test.js)
-- [ ] T032 [US1] Write integration test for full vocabulary creation flow with example sentence (frontend/tests/e2e/vocabulary-workflow.test.js)
+- [x] T026 [P] [US1] Create example_sentence input field in VocabularyForm component (frontend/src/components/VocabularyForm.jsx) with max 500 char counter
+- [x] T027 [P] [US1] Update VocabularyForm submission to send example_sentence in POST/PUT request to backend API (frontend/src/components/VocabularyForm.jsx)
+- [x] T028 [US1] Update vocabularyService.js to include example_sentence in createVocabulary() call (frontend/src/services/vocabularyService.js)
+- [x] T029 [US1] Update vocabularyService.js to include example_sentence in updateVocabulary() call (frontend/src/services/vocabularyService.js)
+- [x] T030 [P] [US1] Apply colors from colors.js to VocabularyForm inputs and labels (frontend/src/components/VocabularyForm.jsx)
+- [x] T031 [US1] Write unit test for VocabularyForm component rendering example sentence field (frontend/tests/unit/components/VocabularyForm.test.js)
+- [x] T032 [US1] Write integration test for full vocabulary creation flow with example sentence (frontend/tests/e2e/vocabulary-workflow.test.js)
 
 **✅ CHECKPOINT: User Story 1 complete - Example sentences fully functional**
 
@@ -97,17 +97,17 @@
 
 ### Frontend Implementation for US2
 
-- [ ] T033 [P] [US2] Create VocabularyManager component in frontend/src/components/VocabularyManager.jsx to display vocabulary list with pagination (20 items per page)
-- [ ] T034 [P] [US2] Add list features to VocabularyManager: display german_word, english_meaning, example_sentence; action buttons for View/Edit/Delete (frontend/src/components/VocabularyManager.jsx)
-- [ ] T035 [US2] Add search/filter functionality to VocabularyManager to filter by german_word or english_meaning (frontend/src/components/VocabularyManager.jsx)
-- [ ] T036 [US2] Create WordsTab page component in frontend/src/pages/WordsTab.jsx importing VocabularyManager
-- [ ] T037 [US2] Update Dashboard.jsx navigation in frontend/src/pages/Dashboard.jsx to include Words tab between Vocabulary and Quiz tabs
-- [ ] T038 [US2] Route Words tab navigation to WordsTab component (frontend/src/pages/Dashboard.jsx)
-- [ ] T039 [US2] Remove vocabulary list display from VocabularyTab in frontend/src/pages/VocabularyTab.jsx (keep only form)
-- [ ] T040 [US2] Add "Create New Word" button in WordsTab that redirects to Vocabulary tab (frontend/src/pages/WordsTab.jsx)
-- [ ] T041 [P] [US2] Apply colors from colors.js to VocabularyManager list items and action buttons (frontend/src/components/VocabularyManager.jsx)
-- [ ] T042 [US2] Write unit test for VocabularyManager rendering vocabulary list (frontend/tests/unit/components/VocabularyManager.test.js)
-- [ ] T043 [US2] Write integration test for Words tab workflow (browse, edit, delete) (frontend/tests/e2e/vocabulary-workflow.test.js)
+- [x] T033 [P] [US2] Create VocabularyManager component in frontend/src/components/VocabularyManager.jsx to display vocabulary list with pagination (20 items per page)
+- [x] T034 [P] [US2] Add list features to VocabularyManager: display german_word, english_meaning, example_sentence; action buttons for View/Edit/Delete (frontend/src/components/VocabularyManager.jsx)
+- [x] T035 [US2] Add search/filter functionality to VocabularyManager to filter by german_word or english_meaning (frontend/src/components/VocabularyManager.jsx)
+- [x] T036 [US2] Create WordsTab page component in frontend/src/pages/WordsTab.jsx importing VocabularyManager
+- [x] T037 [US2] Update Dashboard.jsx navigation in frontend/src/pages/Dashboard.jsx to include Words tab between Vocabulary and Quiz tabs
+- [x] T038 [US2] Route Words tab navigation to WordsTab component (frontend/src/pages/Dashboard.jsx)
+- [x] T039 [US2] Remove vocabulary list display from VocabularyTab in frontend/src/pages/VocabularyTab.jsx (keep only form)
+- [x] T040 [US2] Add "Create New Word" button in WordsTab that redirects to Vocabulary tab (frontend/src/pages/WordsTab.jsx)
+- [x] T041 [P] [US2] Apply colors from colors.js to VocabularyManager list items and action buttons (frontend/src/components/VocabularyManager.jsx)
+- [x] T042 [US2] Write unit test for VocabularyManager rendering vocabulary list (frontend/tests/unit/components/VocabularyManager.test.js)
+- [x] T043 [US2] Write integration test for Words tab workflow (browse, edit, delete) (frontend/tests/e2e/vocabulary-workflow.test.js)
 
 **✅ CHECKPOINT: User Story 2 complete - Dedicated vocabulary management UI functional**
 
@@ -121,35 +121,35 @@
 
 ### Backend Implementation for US3
 
-- [ ] T044 [P] [US3] Implement quiz generation algorithm in backend/src/services/quiz.py: select N random vocabulary entries (1 as correct answer + 3 as distractors)
-- [ ] T045 [P] [US3] Implement distractor selection in backend/src/services/quiz.py to shuffle answer options and track correct_answer_index
-- [ ] T046 [US3] Implement duplicate detection in quiz generation: ensure 4 unique vocabulary entries per question (backend/src/services/quiz.py)
-- [ ] T047 [US3] Create POST /api/quiz/generate endpoint in backend/src/api/quiz.py (NEW FILE) accepting count parameter (1-20 range)
-- [ ] T048 [US3] Create POST /api/quiz/submit endpoint in backend/src/api/quiz.py accepting quiz_id, question_id, selected_option_index and returning is_correct + feedback
-- [ ] T049 [US3] Create POST /api/quiz/complete endpoint in backend/src/api/quiz.py to finalize quiz, calculate score, persist to quiz_sessions table
-- [ ] T050 [US3] Create GET /api/quiz/history endpoint in backend/src/api/quiz.py returning paginated quiz history with stats
-- [ ] T051 [P] [US3] Add input validation in backend/src/api/quiz.py for count range (1-20) and answer option index (0-3)
-- [ ] T052 [US3] Add error handling in backend/src/api/quiz.py for insufficient vocabulary (<4 entries) with 409 Conflict response
-- [ ] T053 [US3] Write integration test for quiz generation in backend/tests/integration/test_quiz.py
-- [ ] T054 [US3] Write integration test for quiz answer submission and scoring in backend/tests/integration/test_quiz.py
-- [ ] T055 [US3] Write contract test for quiz API response schemas in backend/tests/contract/test_quiz_api.py
+- [x] T044 [P] [US3] Implement quiz generation algorithm in backend/src/services/quiz.py: select N random vocabulary entries (1 as correct answer + 3 as distractors)
+- [x] T045 [P] [US3] Implement distractor selection in backend/src/services/quiz.py to shuffle answer options and track correct_answer_index
+- [x] T046 [US3] Implement duplicate detection in quiz generation: ensure 4 unique vocabulary entries per question (backend/src/services/quiz.py)
+- [x] T047 [US3] Create POST /api/quiz/generate endpoint in backend/src/api/quiz.py (NEW FILE) accepting count parameter (1-20 range)
+- [x] T048 [US3] Create POST /api/quiz/submit endpoint in backend/src/api/quiz.py accepting quiz_id, question_id, selected_option_index and returning is_correct + feedback
+- [x] T049 [US3] Create POST /api/quiz/complete endpoint in backend/src/api/quiz.py to finalize quiz, calculate score, persist to quiz_sessions table
+- [x] T050 [US3] Create GET /api/quiz/history endpoint in backend/src/api/quiz.py returning paginated quiz history with stats
+- [x] T051 [P] [US3] Add input validation in backend/src/api/quiz.py for count range (1-20) and answer option index (0-3)
+- [x] T052 [US3] Add error handling in backend/src/api/quiz.py for insufficient vocabulary (<4 entries) with 409 Conflict response
+- [x] T053 [US3] Write integration test for quiz generation in backend/tests/integration/test_quiz.py
+- [x] T054 [US3] Write integration test for quiz answer submission and scoring in backend/tests/integration/test_quiz.py
+- [x] T055 [US3] Write contract test for quiz API response schemas in backend/tests/contract/test_quiz_api.py
 
 ### Frontend Implementation for US3
 
-- [ ] T056 [P] [US3] Create AnswerOptions component in frontend/src/components/AnswerOptions.jsx to render 4 multiple-choice buttons (A, B, C, D)
-- [ ] T057 [P] [US3] Add button states to AnswerOptions: default, selected, correct (green), incorrect (red) (frontend/src/components/AnswerOptions.jsx)
-- [ ] T058 [US3] Update QuizQuestion component in frontend/src/components/QuizQuestion.jsx to display question text and call AnswerOptions for answer display
-- [ ] T059 [US3] Implement answer selection and immediate feedback in QuizQuestion: disable buttons after selection, show correct answer highlight (frontend/src/components/QuizQuestion.jsx)
-- [ ] T060 [P] [US3] Add "Next" button to QuizQuestion component to proceed to next question (frontend/src/components/QuizQuestion.jsx)
-- [ ] T061 [US3] Update QuizTab in frontend/src/pages/QuizTab.jsx to call quizService.generateQuiz() and manage quiz state
-- [ ] T062 [US3] Implement quiz flow in QuizTab: display current question progress (X of Y), handle answer submission, show final score screen (frontend/src/pages/QuizTab.jsx)
-- [ ] T063 [P] [US3] Create quizService in frontend/src/services/quizService.js with generateQuiz(), submitAnswer(), completeQuiz(), getQuizHistory() functions
-- [ ] T064 [US3] Update quizService to handle quiz_id tracking across questions (frontend/src/services/quizService.js)
-- [ ] T065 [P] [US3] Apply colors from colors.js to AnswerOptions buttons and feedback states (green for correct, red for incorrect) (frontend/src/components/AnswerOptions.jsx)
-- [ ] T066 [US3] Apply colors from colors.js to QuizTab progress indicator and final score display (frontend/src/pages/QuizTab.jsx)
-- [ ] T067 [US3] Write unit test for AnswerOptions component rendering 4 buttons (frontend/tests/unit/components/AnswerOptions.test.js)
-- [ ] T068 [US3] Write unit test for QuizQuestion component showing feedback (frontend/tests/unit/components/QuizQuestion.test.js)
-- [ ] T069 [US3] Write integration test for full quiz flow: generate → answer → score (frontend/tests/e2e/quiz-workflow.test.js)
+- [x] T056 [P] [US3] Create AnswerOptions component in frontend/src/components/AnswerOptions.jsx to render 4 multiple-choice buttons (A, B, C, D)
+- [x] T057 [P] [US3] Add button states to AnswerOptions: default, selected, correct (green), incorrect (red) (frontend/src/components/AnswerOptions.jsx)
+- [x] T058 [US3] Update QuizQuestion component in frontend/src/components/QuizQuestion.jsx to display question text and call AnswerOptions for answer display
+- [x] T059 [US3] Implement answer selection and immediate feedback in QuizQuestion: disable buttons after selection, show correct answer highlight (frontend/src/components/QuizQuestion.jsx)
+- [x] T060 [P] [US3] Add "Next" button to QuizQuestion component to proceed to next question (frontend/src/components/QuizQuestion.jsx)
+- [x] T061 [US3] Update QuizTab in frontend/src/pages/QuizTab.jsx to call quizService.generateQuiz() and manage quiz state
+- [x] T062 [US3] Implement quiz flow in QuizTab: display current question progress (X of Y), handle answer submission, show final score screen (frontend/src/pages/QuizTab.jsx)
+- [x] T063 [P] [US3] Create quizService in frontend/src/services/quizService.js with generateQuiz(), submitAnswer(), completeQuiz(), getQuizHistory() functions
+- [x] T064 [US3] Update quizService to handle quiz_id tracking across questions (frontend/src/services/quizService.js)
+- [x] T065 [P] [US3] Apply colors from colors.js to AnswerOptions buttons and feedback states (green for correct, red for incorrect) (frontend/src/components/AnswerOptions.jsx)
+- [x] T066 [US3] Apply colors from colors.js to QuizTab progress indicator and final score display (frontend/src/pages/QuizTab.jsx)
+- [x] T067 [US3] Write unit test for AnswerOptions component rendering 4 buttons (frontend/tests/unit/components/AnswerOptions.test.js)
+- [x] T068 [US3] Write unit test for QuizQuestion component showing feedback (frontend/tests/unit/components/QuizQuestion.test.js)
+- [x] T069 [US3] Write integration test for full quiz flow: generate → answer → score (frontend/tests/e2e/quiz-workflow.test.js)
 
 **✅ CHECKPOINT: User Story 3 complete - Multiple choice quizzes fully functional**
 

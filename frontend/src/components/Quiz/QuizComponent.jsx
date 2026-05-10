@@ -5,7 +5,7 @@ import './QuizComponent.css';
 
 export const QuizComponent = () => {
   const [words, setWords] = useState([]);
-  const [quizState, setQuizState] = useState('start'); // start, quiz, results
+  const [quizState, setQuizState] = useState('start');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState([]);
@@ -22,7 +22,7 @@ export const QuizComponent = () => {
     setLoading(true);
     try {
       const response = await vocabularyService.getAllWords(0, 1000);
-      setWords(response.data.slice(0, 100)); // Limit to 100 for quiz
+      setWords(response.data.slice(0, 100));
     } catch (err) {
       setError('Failed to load words');
     } finally {
@@ -35,7 +35,6 @@ export const QuizComponent = () => {
       setError('No words available for quiz');
       return;
     }
-
     setLoading(true);
     try {
       const response = await quizService.createQuiz(totalQuestions);
@@ -55,72 +54,58 @@ export const QuizComponent = () => {
   const handleAnswer = async (isCorrect) => {
     const newAnswers = [...answers, isCorrect];
     setAnswers(newAnswers);
-
-    if (isCorrect) {
-      setScore(score + 1);
-    }
-
+    const newScore = score + (isCorrect ? 1 : 0);
     if (currentQuestion < totalQuestions - 1) {
+      setScore(newScore);
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // Quiz complete
       try {
-        await quizService.submitQuiz(quizId, score + (isCorrect ? 1 : 0));
+        await quizService.submitQuiz(quizId, newScore);
+        setScore(newScore);
         setQuizState('results');
       } catch (err) {
-        setError('Failed to submit quiz');
+        setScore(newScore);
+        setQuizState('results');
       }
     }
-  };
-
-  const getRandomWord = () => {
-    return words[Math.floor(Math.random() * words.length)];
   };
 
   const getQuizOptions = () => {
     if (words.length < 4) return [];
-
     const correctWord = words[currentQuestion % words.length];
     const options = [correctWord];
-
     while (options.length < 4) {
-      const randomWord = getRandomWord();
+      const randomWord = words[Math.floor(Math.random() * words.length)];
       if (!options.some((w) => w.id === randomWord.id)) {
         options.push(randomWord);
       }
     }
-
     return options.sort(() => Math.random() - 0.5);
   };
 
   if (loading && quizState === 'start') {
-    return <div className="loading" role="status" aria-live="polite">Loading words...</div>;
+    return <div className="quiz-status" role="status" aria-live="polite">Loading...</div>;
   }
 
   if (quizState === 'start') {
     return (
       <div className="quiz-start">
         <h2>German Language Quiz</h2>
-        {error && <div className="error" role="alert" aria-live="assertive">{error}</div>}
-
-        <div className="form-group">
-          <label htmlFor="questions">Number of Questions:</label>
+        {error && <div className="quiz-error" role="alert" aria-live="assertive">{error}</div>}
+        <div className="quiz-form-group">
+          <label htmlFor="questions">Number of Questions</label>
           <select
             id="questions"
             value={totalQuestions}
             onChange={(e) => setTotalQuestions(Math.min(words.length, parseInt(e.target.value)))}
-            aria-label="Select number of quiz questions"
           >
             {[5, 10, 15, 20].map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
+              <option key={n} value={n}>{n}</option>
             ))}
           </select>
         </div>
-
-        <p>Available words: {words.length}</p>
-        <button onClick={startQuiz} disabled={words.length === 0} aria-label="Start German language quiz">
+        <p className="quiz-available">Available words: {words.length}</p>
+        <button onClick={startQuiz} disabled={words.length === 0} className="btn-primary">
           Start Quiz
         </button>
       </div>
@@ -130,38 +115,29 @@ export const QuizComponent = () => {
   if (quizState === 'quiz') {
     const options = getQuizOptions();
     const correctWord = words[currentQuestion % words.length];
-
     return (
       <div className="quiz-container">
-        <div className="quiz-progress" role="progressbar" aria-valuenow={currentQuestion + 1} aria-valuemin="1" aria-valuemax={totalQuestions}>
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{
-                width: `${((currentQuestion + 1) / totalQuestions) * 100}%`,
-              }}
-            ></div>
-          </div>
-          <p>
-            Question {currentQuestion + 1} of {totalQuestions}
-          </p>
+        <div className="quiz-progress-bar">
+          <div
+            className="quiz-progress-fill"
+            style={{ width: `${((currentQuestion + 1) / totalQuestions) * 100}%` }}
+          />
         </div>
-
+        <p className="quiz-counter">Question {currentQuestion + 1} of {totalQuestions}</p>
         <div className="quiz-question">
-          <h3>What is the meaning of "{correctWord.german_word}"?</h3>
-
-          <div className="options" role="group" aria-label="Answer options">
-            {options.map((word) => (
-              <button
-                key={word.id}
-                className="option-btn"
-                onClick={() => handleAnswer(word.id === correctWord.id)}
-                aria-label={`Answer: ${word.meaning}`}
-              >
-                {word.meaning}
-              </button>
-            ))}
-          </div>
+          <p>What is the meaning of</p>
+          <strong className="quiz-word">{correctWord.german_word}</strong>
+        </div>
+        <div className="quiz-options" role="group" aria-label="Answer options">
+          {options.map((word) => (
+            <button
+              key={word.id}
+              className="quiz-option-btn"
+              onClick={() => handleAnswer(word.id === correctWord.id)}
+            >
+              {word.meaning}
+            </button>
+          ))}
         </div>
       </div>
     );
@@ -169,24 +145,14 @@ export const QuizComponent = () => {
 
   if (quizState === 'results') {
     const percentage = Math.round((score / totalQuestions) * 100);
-
     return (
       <div className="quiz-results">
-        <h2>Quiz Complete! 🎉</h2>
-        <div className="score-card">
-          <div className="score-display">
-            <div className="score-number">{percentage}%</div>
-            <div className="score-text">
-              {score} out of {totalQuestions} correct
-            </div>
-          </div>
-
-          {percentage >= 80 && <p className="message excellent">Excellent! Keep it up!</p>}
-          {percentage >= 60 && percentage < 80 && <p className="message good">Good job! Keep practicing!</p>}
-          {percentage < 60 && <p className="message practice">Keep practicing to improve!</p>}
+        <h2>Quiz complete</h2>
+        <div className="quiz-score">
+          <span className="quiz-score-pct">{percentage}%</span>
+          <span className="quiz-score-text">{score} of {totalQuestions} correct</span>
         </div>
-
-        <button onClick={() => setQuizState('start')}>Take Another Quiz</button>
+        <button onClick={() => setQuizState('start')} className="btn-primary">Take Another Quiz</button>
       </div>
     );
   }

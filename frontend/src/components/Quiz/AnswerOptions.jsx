@@ -1,4 +1,4 @@
-import { colors } from '../services/colors';
+import { colors } from '../../services/colors';
 
 export const AnswerOptions = ({ 
   options, 
