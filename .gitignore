@@ -27,3 +27,5 @@ Thumbs.db
 *.tmp
 *.swp
 .idea/
+# CSV data files (runtime, not committed)
+backend/data/

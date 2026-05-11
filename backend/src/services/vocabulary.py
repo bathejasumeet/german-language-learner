@@ -1,74 +1,71 @@
-from sqlalchemy.orm import Session
-from src.models import Word
-from src.models.models import Word as WordModel
+from datetime import datetime, timezone
+import src.csv_store as csv_store
 
 
 class VocabularyService:
     """Service for managing vocabulary operations"""
-    
+
     @staticmethod
-    def create_word(db: Session, german_word: str, meaning: str, example_sentence: str = None) -> Word:
+    def create_word(german_word: str, meaning: str, example_sentence: str = None) -> dict:
         """Create a new word entry with optional example sentence"""
-        # Check for duplicates
-        existing = db.query(Word).filter(
-            Word.german_word.ilike(german_word)
-        ).first()
-        
+        # Case-insensitive duplicate check
+        existing = [
+            w for w in csv_store.words_store.all()
+            if w["german_word"].lower() == german_word.lower()
+        ]
         if existing:
             raise ValueError(f"Word '{german_word}' already exists")
-        
-        # Validate example_sentence if provided
+
         if example_sentence and len(example_sentence) > 500:
             raise ValueError("Example sentence must not exceed 500 characters")
-        
-        word = Word(
-            german_word=german_word, 
-            meaning=meaning,
-            example_sentence=example_sentence
-        )
-        db.add(word)
-        db.commit()
-        db.refresh(word)
-        return word
-    
+
+        return csv_store.words_store.insert({
+            "german_word": german_word,
+            "meaning": meaning,
+            "example_sentence": example_sentence or "",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "times_practiced": 0,
+            "accuracy": 0.0,
+        })
+
     @staticmethod
-    def get_word(db: Session, word_id: int) -> Word | None:
+    def get_word(word_id: int) -> dict | None:
         """Get a word by ID"""
-        return db.query(Word).filter(Word.id == word_id).first()
-    
+        return csv_store.words_store.get(word_id)
+
     @staticmethod
-    def get_all_words(db: Session, skip: int = 0, limit: int = 100) -> list:
+    def get_all_words(skip: int = 0, limit: int = 100) -> list:
         """Get all words with pagination"""
-        return db.query(Word).offset(skip).limit(limit).all()
-    
+        return csv_store.words_store.all()[skip: skip + limit]
+
     @staticmethod
-    def update_word(db: Session, word_id: int, german_word: str = None, meaning: str = None, example_sentence: str = None) -> Word | None:
+    def update_word(
+        word_id: int,
+        german_word: str = None,
+        meaning: str = None,
+        example_sentence: str = None,
+    ) -> dict | None:
         """Update a word entry including optional example sentence"""
-        word = db.query(Word).filter(Word.id == word_id).first()
+        word = csv_store.words_store.get(word_id)
         if not word:
             return None
-        
+
+        kwargs = {}
         if german_word:
-            word.german_word = german_word
+            kwargs["german_word"] = german_word
         if meaning:
-            word.meaning = meaning
+            kwargs["meaning"] = meaning
         if example_sentence is not None:
-            # Validate example_sentence if provided
             if example_sentence and len(example_sentence) > 500:
                 raise ValueError("Example sentence must not exceed 500 characters")
-            word.example_sentence = example_sentence
-        
-        db.commit()
-        db.refresh(word)
-        return word
-    
+            kwargs["example_sentence"] = example_sentence
+
+        if not kwargs:
+            return word
+        return csv_store.words_store.update(word_id, **kwargs)
+
     @staticmethod
-    def delete_word(db: Session, word_id: int) -> bool:
+    def delete_word(word_id: int) -> bool:
         """Delete a word entry"""
-        word = db.query(Word).filter(Word.id == word_id).first()
-        if not word:
-            return False
-        
-        db.delete(word)
-        db.commit()
-        return True
+        return csv_store.words_store.delete(word_id)
+

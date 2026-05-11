@@ -1,9 +1,9 @@
 import logging
-import os
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.database import engine, Base
-from src.models import Word, Flashcard, Progress, Quiz, User, QuizSession
+from src.config import settings
+import src.csv_store as csv_store
 from src.api.words import router as words_router
 from src.api.flashcards import router as flashcards_router
 from src.api.quiz import router as quiz_router
@@ -35,16 +35,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Create database tables on startup
+
 @app.on_event("startup")
 def startup():
-    try:
-        # Only create tables if not in test mode
-        if os.getenv("ENV", "development") != "test":
-            Base.metadata.create_all(bind=engine)
-            logger.info("Database tables created successfully")
-    except Exception as e:
-        logger.error(f"Failed to create database tables: {e}")
+    data_dir = Path(settings.DATA_DIR)
+    csv_store._init_stores(data_dir)
+    logger.info(f"CSV data stores initialised at {data_dir.resolve()}")
 
 
 @app.get("/health")
@@ -55,21 +51,6 @@ def health_check():
 @app.get("/")
 async def root():
     return {"message": "German Language Learning API"}
-    """Root endpoint"""
-    return {"message": "German Language Learning API"}
-
-
-@app.get("/health")
-async def health():
-    """Health check endpoint"""
-    return {"status": "healthy"}
-
-
-@app.exception_handler(ValueError)
-async def value_error_handler(request, exc):
-    """Handle ValueError exceptions"""
-    logger.error(f"ValueError: {exc}")
-    return {"detail": str(exc)}
 
 
 if __name__ == "__main__":

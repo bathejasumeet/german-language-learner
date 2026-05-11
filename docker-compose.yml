@@ -1,35 +1,3 @@
 version: '3.8'
 
-services:
-  postgres:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-german_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-german_password}
-      POSTGRES_DB: ${POSTGRES_DB:-german_db}
-      PGPORT: 5600
-    ports:
-      - "5600:5600"
-    volumes:
-      - ./db:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-german_user} -d ${POSTGRES_DB:-german_db} -p 5600"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  backend:
-    build: ./backend
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-german_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-german_password}
-      POSTGRES_DB: ${POSTGRES_DB:-german_db}
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5600
-    ports:
-      - "8000:8000"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - ./backend:/app
+services: {}

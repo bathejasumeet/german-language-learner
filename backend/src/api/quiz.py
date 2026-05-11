@@ -1,10 +1,8 @@
 import logging
 from typing import List, Optional
 import json
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException, status, Query
 
-from src.database import get_db
 from src.schemas_extended import (
     Quiz, QuizCreate, QuizResult, Progress, UserStatistics,
     QuizGenerateResponse,
@@ -14,17 +12,16 @@ from src.schemas_extended import (
     QuizSession as QuizSessionSchema
 )
 from src.services.quiz import QuizService
-from src.models.models import QuizSession
 
 router = APIRouter(prefix="/api/v1/quiz", tags=["quiz"])
 logger = logging.getLogger(__name__)
 
 
 @router.post("/", response_model=Quiz, status_code=status.HTTP_201_CREATED)
-async def create_quiz(quiz: QuizCreate, db: Session = Depends(get_db)):
+async def create_quiz(quiz: QuizCreate):
     """Create a new quiz session"""
     try:
-        created_quiz = QuizService.create_quiz(db, quiz.total_questions)
+        created_quiz = QuizService.create_quiz(quiz.total_questions)
         return created_quiz
     except Exception as e:
         logger.error(f"Error creating quiz: {e}")
@@ -34,16 +31,15 @@ async def create_quiz(quiz: QuizCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/", response_model=List[Quiz])
-async def get_quizzes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_quizzes(skip: int = 0, limit: int = 100):
     """Get all quiz sessions with pagination"""
-    quizzes = QuizService.get_all_quizzes(db, skip=skip, limit=limit)
-    return quizzes
+    return QuizService.get_all_quizzes(skip=skip, limit=limit)
 
 
 @router.get("/{quiz_id}", response_model=Quiz)
-async def get_quiz(quiz_id: int, db: Session = Depends(get_db)):
+async def get_quiz(quiz_id: int):
     """Get a specific quiz session"""
-    quiz = QuizService.get_quiz(db, quiz_id)
+    quiz = QuizService.get_quiz(quiz_id)
     if not quiz:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Quiz not found"
@@ -52,15 +48,15 @@ async def get_quiz(quiz_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{quiz_id}/submit", response_model=Quiz)
-async def submit_quiz(quiz_id: int, result: QuizResult, db: Session = Depends(get_db)):
+async def submit_quiz(quiz_id: int, result: QuizResult):
     """Submit quiz results"""
     try:
-        quiz = QuizService.submit_quiz_result(db, quiz_id, result.correct_answers)
+        quiz = QuizService.submit_quiz_result(quiz_id, result.correct_answers)
         if not quiz:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Quiz not found"
             )
-        logger.info(f"Submitted quiz {quiz_id} with score {quiz.score}%")
+        logger.info(f"Submitted quiz {quiz_id} with score {quiz['score']}%")
         return quiz
     except Exception as e:
         logger.error(f"Error submitting quiz: {e}")
@@ -70,10 +66,10 @@ async def submit_quiz(quiz_id: int, result: QuizResult, db: Session = Depends(ge
 
 
 @router.post("/progress/{word_id}", response_model=Progress)
-async def record_word_progress(word_id: int, correct: bool, db: Session = Depends(get_db)):
+async def record_word_progress(word_id: int, correct: bool):
     """Record progress for a word"""
     try:
-        progress = QuizService.record_word_progress(db, word_id, correct)
+        progress = QuizService.record_word_progress(word_id, correct)
         if not progress:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Word not found"
@@ -87,9 +83,9 @@ async def record_word_progress(word_id: int, correct: bool, db: Session = Depend
 
 
 @router.get("/progress/{word_id}", response_model=Progress)
-async def get_word_progress(word_id: int, db: Session = Depends(get_db)):
+async def get_word_progress(word_id: int):
     """Get progress for a specific word"""
-    progress = QuizService.get_word_progress(db, word_id)
+    progress = QuizService.get_word_progress(word_id)
     if not progress:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Progress not found"
@@ -98,10 +94,9 @@ async def get_word_progress(word_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/stats/overall", response_model=UserStatistics)
-async def get_user_statistics(db: Session = Depends(get_db)):
+async def get_user_statistics():
     """Get overall user statistics"""
-    stats = QuizService.get_user_statistics(db)
-    return stats
+    return QuizService.get_user_statistics()
 
 
 # ============= Multiple-Choice Quiz Endpoints =============
@@ -109,29 +104,19 @@ async def get_user_statistics(db: Session = Depends(get_db)):
 @router.post("/generate", response_model=QuizGenerateResponse, status_code=status.HTTP_201_CREATED)
 async def generate_quiz(
     count: int = Query(10, ge=1, le=20),
-    db: Session = Depends(get_db)
 ):
     """
     Generate a new multiple-choice quiz with specified number of questions.
-    
-    Args:
-        count: Number of questions (1-20)
-        db: Database session
-    
-    Returns:
-        Quiz ID and list of questions with options
     """
     try:
-        # Validate vocabulary count
-        if not QuizService.validate_quiz_prerequisites(db):
-            vocab_count = QuizService.get_vocabulary_count(db)
+        if not QuizService.validate_quiz_prerequisites():
+            vocab_count = QuizService.get_vocabulary_count()
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail=f"Insufficient vocabulary. Need at least 4 entries to generate quiz. Current: {vocab_count}"
             )
-        
-        # Generate quiz
-        quiz_id, questions = QuizService.generate_quiz(db, count)
+
+        quiz_id, questions = QuizService.generate_quiz(count)
         
         # Convert QuizQuestion dataclass objects to dict for response
         questions_data = [
@@ -166,7 +151,6 @@ async def generate_quiz(
 @router.post("/submit", response_model=QuizAnswerFeedback)
 async def submit_quiz_answer(
     submission: QuizAnswerSubmission,
-    db: Session = Depends(get_db)
 ):
     """
     Submit an answer to a quiz question and get feedback.
@@ -207,7 +191,6 @@ async def submit_quiz_answer(
 async def complete_quiz(
     quiz_data: dict,
     user_id: int = Query(1),
-    db: Session = Depends(get_db)
 ):
     """
     Complete a quiz and persist results.
@@ -232,9 +215,7 @@ async def complete_quiz(
         if not 0 <= score <= total_questions or total_questions == 0:
             raise ValueError("Invalid score or total_questions")
         
-        # Create quiz session record
         quiz_session = QuizService.create_quiz_session(
-            db,
             user_id=user_id,
             vocabulary_ids=vocabulary_ids,
             score=score,
@@ -242,12 +223,9 @@ async def complete_quiz(
             answers_json=json.dumps(results),
             duration_seconds=duration_seconds
         )
-        
-        # Calculate percentage
+
         percentage = (score / total_questions * 100) if total_questions > 0 else 0
-        
-        # Get updated statistics
-        statistics = QuizService.get_quiz_statistics(db, user_id)
+        statistics = QuizService.get_quiz_statistics(user_id)
         
         logger.info(f"Completed quiz {quiz_id}: {score}/{total_questions} ({percentage:.1f}%)")
         
@@ -274,7 +252,6 @@ async def get_quiz_history(
     user_id: int = Query(1),
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1, le=100),
-    db: Session = Depends(get_db)
 ):
     """
     Get paginated quiz history for a user.
@@ -289,7 +266,7 @@ async def get_quiz_history(
         List of quiz sessions
     """
     try:
-        quiz_history = QuizService.get_quiz_history(db, user_id, skip, limit)
+        quiz_history = QuizService.get_quiz_history(user_id, skip, limit)
         logger.info(f"Retrieved quiz history for user {user_id}: {len(quiz_history)} sessions")
         return quiz_history
         
@@ -304,7 +281,6 @@ async def get_quiz_history(
 @router.get("/statistics")
 async def get_quiz_statistics_endpoint(
     user_id: int = Query(1),
-    db: Session = Depends(get_db)
 ):
     """
     Get quiz statistics for a user.
@@ -317,7 +293,7 @@ async def get_quiz_statistics_endpoint(
         Statistics including total quizzes, average score, etc.
     """
     try:
-        statistics = QuizService.get_quiz_statistics(db, user_id)
+        statistics = QuizService.get_quiz_statistics(user_id)
         logger.info(f"Retrieved quiz statistics for user {user_id}")
         return statistics
         

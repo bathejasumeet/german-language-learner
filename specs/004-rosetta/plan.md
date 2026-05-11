@@ -1,104 +1,104 @@
-# Implementation Plan: Rosetta — Local LLM Memory Aids
+# Implementation Plan: [FEATURE]
 
-**Branch**: `004-rosetta` | **Date**: 2026-05-11 | **Spec**: [spec.md](spec.md)  
-**Input**: Feature specification from `/specs/004-rosetta/spec.md`
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
-Add a **Rosetta** tab to the German Language Learner app (positioned before Statistics) that uses a locally-running Ollama LLM to generate three unique mnemonic sentences per German vocabulary word. The backend exposes a new endpoint (`POST /api/v1/rosetta/generate`) that communicates with the Ollama HTTP API, caches results in memory per word, and returns structured JSON. The frontend adds a new page component with a word selector, loading state, error handling, and a regenerate action.
-
-No new database schema or dependencies are required beyond `httpx` (already a transitive dependency of FastAPI).
-
----
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
 
-**Language/Version**: Python 3.11+ (backend), JavaScript ES2022 / React 19.2.4 (frontend)  
-**Primary Dependencies**: FastAPI 0.135, SQLAlchemy 2.0, httpx (transitive vi**Primary Dependencies**: FastAPI 0.135, SQLAlchem*Storage**Primary Dependencies**: FastAPI 0.135, SQLAlchemy 2.0, httpx (transitihe (new, e**Primary Dependencies**: FastAPI 0.135, SQLAlchemy 2.0, httpx (test + Testing L**Primary Dependencies**: FastAPI 0.135, SQLAlchemy 2.0, httpx (transitive vi**Primary Dependencies**: FastAPI 0.135, SQLAlchem*Storage**Primary Dependencies**: FastAPI 0.135, SQLAlchemy 2.0, httpx (transitihe (new, e**Primary Dependencies**: FastAPI 0.135, SQLAlchemy 2.0, httpx (test + Testing L**Primary Dependencies**: FastAPI 0.135, SQLAlchemy 2.0, httpx (transitive vi**Primary Dependencies**: FastAPI 0.135, SQLAlchem*Storage**Primary Dependencies**: FastAPI 0.1ns in v1
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
 
----
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
-### I. Code Quality (NON-NEGOTIABLE) ✅
-- New files follow the established module structure (`backend/src- New files follosrc/services/`, `frontend/src/pages/`, `frontend/src/services/`).
-- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (bac- Linting: `ruff`/`flake8` (boncise a- Linting: `rufith exis- Linting: `ruff`/`flake8` (bac- Lintin etc.).
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-### IV. Performance Requirements ✅
-- In-memory cache eliminates redundant LLM calls (SC-002: < 200ms on cache hit).
-- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Async HTTP client (`h- Asyn� NEW: Ollama client, cache, prompt builder
-│   ├── schemas.py              ← MODIFIED: add RosettaRequest, RosettaResponse
-│   └── main.py                 ← MODIFIED: register rosetta_router
+[Gates determined based on constitution file]
+
+## Project Structure
+
+### Documentation (this feature)
+
+```text
+specs/[###-feature]/
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+```
+
+### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
+
+```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+src/
+├── models/
+├── services/
+├── cli/
+└── lib/
+
+tests/
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+backend/
+├── src/
+│   ├── models/
+│   ├── services/
+│   └── api/
 └── tests/
-    ├── unit/
-    │   └── test_rosetta.py     ← NEW: unit tests (mocked Ollama)
-    └── integration/
-        └── test_rosetta_integration.py  ← NEW: integration tests (real Ollama)
 
 frontend/
 ├── src/
 │   ├── components/
-│   │   └── Navigation.jsx      ← MODIFIED: add rosetta tab before statistics
 │   ├── pages/
-│   │   └── Rosetta.jsx         ← NEW: Rosetta page component
 │   └── services/
-│       └── rosetta.js          ← NEW: Axios service wrapper
 └── tests/
-    └── unit/
-        └── rosetta.test.jsx    ← NEW: Vitest component tests
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
----
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
-## Phase 0: Research Summary
+## Complexity Tracking
 
-All unknowns resolved — see [research.md](research.md).
+> **Fill ONLY if Constitution Check has violations that must be justified**
 
-| Decision | Outcome |
-|----------|---------|
-| Ollama integration | Direct HTTP via `httpx.AsyncClient`, `POST /api/generate` |
-| Model selection | `OLLAMA_MODEL` env var, default `llama3` |
-| Prompt engineering | Fixed template with numbered output (| Prompt engineac| Prompt engineerile| Prompt engineering | Fixed template with numbered output (| Prompt enginHT| Prompt engineering | Fa u| Prompt engineering | Fixed template with numbered output (| Prompt engineac| Promp entr| Pro
-
-----------ase 1: D----------ase 1: D-------ode----------ase 1: D----------ase 1: D-------ode----------ase 1: D----------ase 1: D------Py----------ase  (in-memo----------ase 1: D----------ase 1: D-------ode----------ase 1: D--------t`----------ase 1: D-- Memor----------ase 1: D----------ase 1: D-------ode----------ase 1: D----
-
-##############ct �##############ct ett##############ct �##############ct ett##############ct �#########
-  - Request: `{ word_id: int, force?: bool }  - Request: `{ word_id: int, force?: bool }  - Request:],   - Request: `{ word_}`  - Request: `{ word_d   - Request: `{ word_id: int, force?: bool }  - Request: `{ word_id: int, force?:ns  - Request: `{ word_id: int, force?: bool }  - Request: `{t(Ba  - Request: `{ word_id: int, force?: bool }  - Request: `{ word_id: int, force?: bool }  - Request:],   - Request: `{ word_}`  - Request: `{ word_d   - Request: `{ word_id: int, force?: bool }  - Request: `{ word_id: int, force?:ns  - Request: `{ word_id: int, force?: bool }  - Request: `{t(= {  - Request: `{ word_id: int, force?: bool }  - Request: `{ word_id: int, force?: bool }  - Request:],   - Request: `{ word_}`  - Request: `{ word_d   - Request: `{ word_id: int, force?: bool }  - Request: `{ word_id: int, force?:ns  - Request: `{ word_id: int, force?: bool }  - Request: `{t(Ba  - Request: `{ word_id: int,_call_ollama(german_word, meaning) -> list[str]:
-    # httpx.AsyncClient POST to OLLAMA_BASE_URL/api/generate
-    # Parse numbered lines from response["response"]
-    # Raise OllamaUnavailableError on connection error → 503
-```
-
-### Frontend Rosetta Page (`frontend/src/pages/Rosetta.jsx`)
-```
-State: { words, selectedWordId, sentences, loading, error, cached }
-
-On mount: fetch all words via vocabularyService.getAllWords()
-On word select: call rosettaService.generate(wordId)
-On regenerate: call rosettaService.generate(wordId, force=true)
-
-UI:
-  - Word selector (dropdown)
-  - Generate / Regenerate button
-  - Loading spinner (while loading)
-  - Error alert (when error)
-  - Sentence cards (3 × sentence display)
-  - "From cache" badge (when cached)
-```
-
-### Frontend Service (`frontend/src/services/rosetta.js`)
-```javascript
-export const rosettaService = {
-  generate: (wordId, force = false) =>
-    api.post('/api/v1/rosetta/generate', { word_id: wordId, force }),
-};
-```
-
-### Navigation Update (`frontend/src/components/Navigation.jsx`)
-Insert before `{ id: 'statistics', label: 'Statistics' }`:
-```javascript
-{ id: 'rosetta{ id: 'rosetta{ id: 'rosetta{ id: 'rosetta{ id: 'rour{ id: 'rosetta{ id: 'rosetta{ id: 'rosetta{ id: 'rosetta{ iking
-
-No No No No No No No No No No No No No No No No No No No No Noed.
-
--------------------------------------------------------------------ent------------------------------------------------------
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

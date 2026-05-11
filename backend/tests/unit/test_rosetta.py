@@ -110,11 +110,7 @@ def client():
 
 @pytest.fixture
 def mock_word():
-    word = MagicMock()
-    word.id = 10
-    word.german_word = "Fenster"
-    word.meaning = "window"
-    return word
+    return {"id": 10, "german_word": "Fenster", "meaning": "window"}
 
 
 class TestRosettaRouter:

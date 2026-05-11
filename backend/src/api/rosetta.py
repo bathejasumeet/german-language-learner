@@ -1,8 +1,6 @@
 import logging
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException, status
 
-from src.database import get_db
 from src.schemas import RosettaRequest, RosettaResponse
 from src.services.vocabulary import VocabularyService
 from src.services import ollama_service
@@ -18,10 +16,9 @@ logger = logging.getLogger(__name__)
 @router.post("/generate", response_model=RosettaResponse)
 async def generate_rosetta(
     body: RosettaRequest,
-    db: Session = Depends(get_db),
 ):
     """Generate three memory-aid sentences for a German vocabulary word."""
-    word = VocabularyService.get_word(db, body.word_id)
+    word = VocabularyService.get_word(body.word_id)
     if not word:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -34,8 +31,8 @@ async def generate_rosetta(
     try:
         aid = await generate_memory_aid(
             word_id=body.word_id,
-            german_word=word.german_word,
-            meaning=word.meaning,
+            german_word=word["german_word"],
+            meaning=word["meaning"],
             force=body.force,
         )
     except OllamaUnavailableError:
