@@ -12,6 +12,10 @@ class Settings:
     POSTGRES_DB: str = os.getenv("POSTGRES_DB", "german_db")
     POSTGRES_HOST: str = os.getenv("POSTGRES_HOST", "localhost")
     POSTGRES_PORT: int = int(os.getenv("POSTGRES_PORT", 5432))
+
+    # Ollama (local LLM) configuration
+    OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "llama3")
     
     @property
     def DATABASE_URL(self) -> str:

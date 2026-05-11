@@ -1,0 +1,125 @@
+openapi: "3.0.3"
+info:
+  title: Rosetta API
+  description: Endpoint for generating local LLM memory-aid sentences for German vocabulary words.
+  version: "1.0.0"
+
+paths:
+  /api/v1/rosetta/generate:
+    post:
+      summary: Generate memory-aid sentences for a vocabulary word
+      description: >
+        Accepts a word ID and returns three unique mnemonic sentences generated
+        by the local Ollama LLM. Results are cached per word; pass force=true
+        to bypass the cache and regenerate.
+      operationId: generateMemoryAid
+      tags:
+        - rosetta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RosettaRequest"
+            example:
+              word_id: 42
+              force: false
+      responses:
+        "200":
+          description: Sentences generated or returned from cache
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RosettaResponse"
+              example:
+                word_id: 42
+                german_word: "Fenster"
+                sentences:
+                  - "When you look through the Fenster (window), imagine a fence with a star — Fen-ster."
+                  - "The Fenster fogged up as the knight breathed on it, seeking his way."
+                  - "Fenster sounds like 'fan' + 'star': picture a star-shaped fan mounted in a window."
+                generated_at: "2026-05-11T10:00:00Z"
+                cached: false
+        "404":
+          description: Word not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                detail: "Word not found"
+        "503":
+          description: Local Ollama service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                detail: "Local AI service unavailable. Please ensure Ollama is running."
+        "500":
+          description: LLM response could not be parsed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                detail: "Failed to generate sentences. Try again."
+
+components:
+  schemas:
+    RosettaRequest:
+      type: object
+      required:
+        - word_id
+      properties:
+        word_id:
+          type: integer
+          minimum: 1
+          description: ID of the vocabulary word to generate sentences for
+          example: 42
+        force:
+          type: boolean
+          default: false
+          description: If true, bypass the cache and force new generation
+
+    RosettaResponse:
+      type: object
+      required:
+        - word_id
+        - german_word
+        - sentences
+        - generated_at
+        - cached
+      properties:
+        word_id:
+          type: integer
+          description: The vocabulary word ID
+          example: 42
+        german_word:
+          type: string
+          description: The German word
+          example: "Fenster"
+        sentences:
+          type: array
+          items:
+            type: string
+          minItems: 3
+          maxItems: 3
+          description: Exactly three memory-aid sentences
+        generated_at:
+          type: string
+          format: date-time
+          description: UTC ISO 8601 timestamp of when sentences were generated
+          example: "2026-05-11T10:00:00Z"
+        cached:
+          type: boolean
+          description: True if these sentences were returned from the in-memory cache
+
+    ErrorResponse:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          description: Human-readable error description

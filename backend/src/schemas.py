@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 
 class WordBase(BaseModel):
@@ -31,3 +31,22 @@ class Word(WordBase):
     
     class Config:
         from_attributes = True
+
+
+# ---------------------------------------------------------------------------
+# Rosetta schemas
+# ---------------------------------------------------------------------------
+
+class RosettaRequest(BaseModel):
+    """Request body for POST /api/v1/rosetta/generate"""
+    word_id: int = Field(..., gt=0)
+    force: bool = Field(False, description="Bypass cache and regenerate sentences")
+
+
+class RosettaResponse(BaseModel):
+    """Response body for POST /api/v1/rosetta/generate"""
+    word_id: int
+    german_word: str
+    sentences: List[str] = Field(..., min_length=3, max_length=3)
+    generated_at: datetime
+    cached: bool

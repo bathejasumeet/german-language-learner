@@ -4,6 +4,7 @@ import { WordsTab } from '../pages/WordsTab';
 import { QuizComponent } from '../components/Quiz/QuizComponent';
 import { Statistics } from '../components/Quiz/Statistics';
 import { FlashcardStudy } from '../components/Flashcards/FlashcardStudy';
+import { Rosetta } from '../pages/Rosetta';
 import './Navigation.css';
 
 const TABS = [
@@ -11,6 +12,7 @@ const TABS = [
   { id: 'words',      label: 'Words' },
   { id: 'flashcards', label: 'Flashcards' },
   { id: 'quiz',       label: 'Quiz' },
+  { id: 'rosetta',    label: 'Rosetta' },
   { id: 'statistics', label: 'Statistics' },
 ];
 
@@ -23,6 +25,7 @@ export const Navigation = () => {
       case 'words':       return <WordsTab />;
       case 'flashcards':  return <FlashcardStudy />;
       case 'quiz':        return <QuizComponent />;
+      case 'rosetta':     return <Rosetta />;
       case 'statistics':  return <Statistics />;
       default:            return <Vocabulary />;
     }

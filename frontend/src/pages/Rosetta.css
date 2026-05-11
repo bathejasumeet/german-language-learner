@@ -1,0 +1,172 @@
+.rosetta-page {
+  padding: var(--spacing-lg) 0;
+  max-width: 700px;
+}
+
+.rosetta-page h2 {
+  margin-bottom: var(--spacing-sm);
+  font-size: 1.25rem;
+}
+
+.rosetta-subtitle {
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-lg);
+  font-size: 0.9rem;
+}
+
+.rosetta-controls {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-lg);
+}
+
+.rosetta-empty {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.rosetta-select {
+  flex: 1;
+  min-width: 220px;
+  padding: 0.5rem var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  cursor: pointer;
+}
+
+.rosetta-select:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.rosetta-btn {
+  padding: 0.5rem var(--spacing-md);
+  border-radius: 6px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  white-space: nowrap;
+}
+
+.rosetta-btn.primary {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.rosetta-btn.primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.rosetta-btn.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.rosetta-btn.secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.rosetta-btn.secondary:hover {
+  background-color: #eff6ff;
+}
+
+.rosetta-loading {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.rosetta-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: rosetta-spin 0.7s linear infinite;
+}
+
+@keyframes rosetta-spin {
+  to { transform: rotate(360deg); }
+}
+
+.rosetta-error {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  padding: var(--spacing-md);
+  background-color: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  color: #7f1d1d;
+  font-size: 0.9rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+.rosetta-result {
+  margin-top: var(--spacing-md);
+}
+
+.rosetta-result-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.rosetta-result-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.rosetta-badge {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background-color: #eff6ff;
+  color: var(--color-primary);
+  border: 1px solid #bfdbfe;
+}
+
+.rosetta-sentences {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.rosetta-sentence-card {
+  padding: var(--spacing-md);
+  background-color: #f9fafb;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.rosetta-sentence-card::before {
+  content: counter(list-item) ". ";
+  counter-increment: list-item;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.rosetta-sentences {
+  counter-reset: list-item;
+}
