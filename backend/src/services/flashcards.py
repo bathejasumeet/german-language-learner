@@ -5,6 +5,31 @@ import src.csv_store as csv_store
 logger = logging.getLogger(__name__)
 
 
+def _normalize_flashcard(fc: dict) -> dict:
+    """Convert empty-string last_studied (CSV default) to None."""
+    if fc.get("last_studied") == "":
+        fc["last_studied"] = None
+    return fc
+
+
+def _enrich_flashcard(fc: dict | None) -> dict | None:
+    """Attach nested word data required by the response schema."""
+    if not fc:
+        return None
+
+    _normalize_flashcard(fc)
+    word = csv_store.words_store.get(fc["word_id"])
+    if not word:
+        return fc
+
+    fc["word"] = {
+        "german_word": word["german_word"],
+        "meaning": word["meaning"],
+        "example_sentence": word.get("example_sentence") or None,
+    }
+    return fc
+
+
 class FlashcardService:
     """Service for managing flashcard operations"""
 
@@ -20,26 +45,27 @@ class FlashcardService:
             # Check if flashcard already exists for this word
             existing = csv_store.flashcards_store.where(word_id=word_id)
             if existing:
-                continue
+                fc = existing[0]
+            else:
+                fc = csv_store.flashcards_store.insert({
+                    "word_id": word_id,
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "last_studied": "",
+                })
 
-            fc = csv_store.flashcards_store.insert({
-                "word_id": word_id,
-                "created_at": datetime.now(timezone.utc).isoformat(),
-                "last_studied": "",
-            })
-            flashcards.append(fc)
+            flashcards.append(_enrich_flashcard(fc))
 
         return flashcards
 
     @staticmethod
     def get_all_flashcards(skip: int = 0, limit: int = 100) -> list:
         """Get all flashcards with pagination"""
-        return csv_store.flashcards_store.all()[skip: skip + limit]
+        return [_enrich_flashcard(fc) for fc in csv_store.flashcards_store.all()[skip: skip + limit]]
 
     @staticmethod
     def get_flashcard(flashcard_id: int) -> dict | None:
         """Get a specific flashcard"""
-        return csv_store.flashcards_store.get(flashcard_id)
+        return _enrich_flashcard(csv_store.flashcards_store.get(flashcard_id))
 
     @staticmethod
     def mark_flashcard_known(flashcard_id: int) -> dict | None:
@@ -59,7 +85,7 @@ class FlashcardService:
             last_studied=datetime.now(timezone.utc).isoformat(),
         )
         logger.info(f"Marked flashcard {flashcard_id} as known")
-        return updated
+        return _enrich_flashcard(updated)
 
     @staticmethod
     def delete_flashcard(flashcard_id: int) -> bool:

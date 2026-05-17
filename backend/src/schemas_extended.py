@@ -13,12 +13,23 @@ class FlashcardCreate(FlashcardBase):
     pass
 
 
+class FlashcardWord(BaseModel):
+    """Nested word data returned inside a Flashcard"""
+    german_word: str
+    meaning: str
+    example_sentence: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
 class Flashcard(FlashcardBase):
     """Schema for Flashcard response"""
     id: int
     created_at: datetime
     last_studied: Optional[datetime] = None
-    
+    word: FlashcardWord
+
     class Config:
         from_attributes = True
 

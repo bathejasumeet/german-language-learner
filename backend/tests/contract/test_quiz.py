@@ -214,7 +214,7 @@ def test_quiz_statistics_response_schema(client, test_db):
 
 def test_error_response_schema_for_insufficient_vocabulary(client, test_db):
     """Test error response schema when vocabulary is insufficient"""
-    # Create only 2 words (need 4)
+    # Create only 2 words (need at least 10)
     for i in range(2):
         word = Word(german_word=f"Word{i}", meaning=f"Meaning{i}")
         test_db.add(word)

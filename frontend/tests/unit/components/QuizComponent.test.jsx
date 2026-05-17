@@ -1,39 +1,41 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { QuizComponent } from '../../../src/components/Quiz/QuizComponent';
 import { vocabularyService } from '../../../src/services/vocabulary';
-import { quizService } from '../../../src/services/quiz';
+import { quizService } from '../../../src/services/quizService';
 
 vi.mock('../../../src/services/vocabulary');
-vi.mock('../../../src/services/quiz', () => ({
+vi.mock('../../../src/services/quizService', () => ({
   quizService: {
-    createQuiz: vi.fn(),
-    submitQuiz: vi.fn(),
-    getUserStatistics: vi.fn(),
+    generateQuiz: vi.fn(),
+    completeQuiz: vi.fn(),
   },
 }));
 
-const mockWords = [
-  { id: 1, german_word: 'Apfel', meaning: 'Apple' },
-  { id: 2, german_word: 'Wasser', meaning: 'Water' },
-  { id: 3, german_word: 'Hund', meaning: 'Dog' },
-  { id: 4, german_word: 'Katze', meaning: 'Cat' },
-  { id: 5, german_word: 'Buch', meaning: 'Book' },
-];
+const makeWords = (count) =>
+  Array.from({ length: count }, (_, i) => ({
+    id: i + 1,
+    german_word: `Wort${i + 1}`,
+    meaning: `Word${i + 1}`,
+  }));
+
+const mockWords10 = makeWords(10);
 
 const mockQuestion = {
-  question_id: 'q1',
-  word_id: 1,
-  german_word: 'Apfel',
-  options: ['Apple', 'Book', 'Dog', 'Water'],
-  correct_answer: 'Apple',
+  id: 'q_1',
+  vocabulary_id: 1,
+  question: 'What is the English meaning of: Wort1?',
+  german_word: 'Wort1',
+  english_meaning: 'Word1',
+  options: ['Word1', 'Word2', 'Word3', 'Word4'],
+  correct_answer_index: 0,
 };
 
 describe('QuizComponent', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vocabularyService.getAllWords.mockResolvedValue({ data: mockWords });
+    vocabularyService.getAllWords.mockResolvedValue({ data: mockWords10 });
+    quizService.completeQuiz.mockResolvedValue({ data: {} });
   });
 
   it('renders "German Language Quiz" heading', async () => {
@@ -53,56 +55,81 @@ describe('QuizComponent', () => {
   it('shows available word count', async () => {
     render(<QuizComponent />);
     await waitFor(() => {
-      expect(screen.getByText(/Available words: 5/i)).toBeDefined();
+      expect(screen.getByText(/Available words: 10/i)).toBeDefined();
     });
   });
 
-  it('disables Start button when no words available', async () => {
-    vocabularyService.getAllWords.mockResolvedValue({ data: [] });
+  it('shows error message when fewer than 10 words available', async () => {
+    vocabularyService.getAllWords.mockResolvedValue({ data: makeWords(7) });
     render(<QuizComponent />);
     await waitFor(() => {
-      const startBtn = screen.getByRole('button', { name: /Start Quiz/i });
-      expect(startBtn.disabled).toBe(true);
+      expect(screen.getByText(/at least 10 words/i)).toBeDefined();
     });
+    expect(screen.queryByRole('button', { name: /Start Quiz/i })).toBeNull();
   });
 
-  it('enables Start button when words are available', async () => {
+  it('shows Start Quiz button when 10 or more words available', async () => {
     render(<QuizComponent />);
     await waitFor(() => {
-      const startBtn = screen.getByRole('button', { name: /Start Quiz/i });
-      expect(startBtn.disabled).toBe(false);
+      expect(screen.getByRole('button', { name: /Start Quiz/i })).toBeDefined();
     });
   });
 
   it('starts quiz and shows question on Start click', async () => {
-    quizService.createQuiz.mockResolvedValue({ data: { id: 1 } });
+    quizService.generateQuiz.mockResolvedValue({
+      data: { quiz_id: 'quiz_1', total_questions: 1, questions: [mockQuestion] },
+    });
     render(<QuizComponent />);
     await waitFor(() => screen.getByRole('button', { name: /Start Quiz/i }));
     fireEvent.click(screen.getByRole('button', { name: /Start Quiz/i }));
     await waitFor(() => {
-      expect(screen.getByText('Apfel')).toBeDefined();
+      expect(screen.getByText('Wort1')).toBeDefined();
     });
   });
 
-  it('shows results screen after answering all questions', async () => {
-    quizService.createQuiz.mockResolvedValue({ data: { id: 1 } });
-    quizService.submitQuiz.mockResolvedValue({ data: {} });
+  it('renders four options per question', async () => {
+    quizService.generateQuiz.mockResolvedValue({
+      data: { quiz_id: 'quiz_1', total_questions: 1, questions: [mockQuestion] },
+    });
     render(<QuizComponent />);
     await waitFor(() => screen.getByRole('button', { name: /Start Quiz/i }));
     fireEvent.click(screen.getByRole('button', { name: /Start Quiz/i }));
-    // Answer all 5 questions (minimum from select is 5; totalQuestions defaults to 10
-    // but words.length = 5 so we answer 5 rounds until complete)
-    await waitFor(() => screen.getByRole('group'));
-    const optionButtons = screen.getAllByRole('button', { name: /Apple|Water|Dog|Cat|Book/i });
-    // Click through questions — we just click any option 10 times
-    for (let i = 0; i < 10; i++) {
-      const options = screen.queryAllByRole('button', { name: /Apple|Water|Dog|Cat|Book/i });
-      if (options.length === 0) break;
-      fireEvent.click(options[0]);
-      await new Promise((r) => setTimeout(r, 0));
-    }
-    await waitFor(() => {
-      expect(screen.getByText(/Quiz complete/i)).toBeDefined();
+    await waitFor(() => screen.getByText('Wort1'));
+    const optionBtns = screen.getAllByRole('button', { name: /Option [ABCD]/i });
+    expect(optionBtns.length).toBe(4);
+  });
+
+  it('shows results screen after answering all questions', async () => {
+    quizService.generateQuiz.mockResolvedValue({
+      data: { quiz_id: 'quiz_1', total_questions: 1, questions: [mockQuestion] },
     });
+    render(<QuizComponent />);
+    await waitFor(() => screen.getByRole('button', { name: /Start Quiz/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Start Quiz/i }));
+    await waitFor(() => screen.getByText('Wort1'));
+    // Select first option
+    const optionBtns = screen.getAllByRole('button', { name: /Option A/i });
+    fireEvent.click(optionBtns[0]);
+    // Click the "See Results" next button
+    await waitFor(() => screen.getByRole('button', { name: /See Results/i }));
+    fireEvent.click(screen.getByRole('button', { name: /See Results/i }));
+    await waitFor(() => {
+      expect(screen.getByText(/Quiz Complete/i)).toBeDefined();
+    });
+  });
+
+  it('shows Take Another Quiz button on results screen', async () => {
+    quizService.generateQuiz.mockResolvedValue({
+      data: { quiz_id: 'quiz_1', total_questions: 1, questions: [mockQuestion] },
+    });
+    render(<QuizComponent />);
+    await waitFor(() => screen.getByRole('button', { name: /Start Quiz/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Start Quiz/i }));
+    await waitFor(() => screen.getByText('Wort1'));
+    fireEvent.click(screen.getAllByRole('button', { name: /Option A/i })[0]);
+    await waitFor(() => screen.getByRole('button', { name: /See Results/i }));
+    fireEvent.click(screen.getByRole('button', { name: /See Results/i }));
+    await waitFor(() => screen.getByRole('button', { name: /Take Another Quiz/i }));
+    expect(screen.getByRole('button', { name: /Take Another Quiz/i })).toBeDefined();
   });
 });

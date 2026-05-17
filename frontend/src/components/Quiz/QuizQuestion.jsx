@@ -10,23 +10,18 @@ export const QuizQuestion = ({
   onAnswerSelected 
 }) => {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
-  const [showFeedback, setShowFeedback] = useState(false);
+  const [hasSelected, setHasSelected] = useState(false);
 
   const handleSelectAnswer = (index) => {
+    if (hasSelected) return;
     setSelectedOptionIndex(index);
-    setShowFeedback(true);
-    
-    // Notify parent component
-    onAnswerSelected({
-      question_id: question.id,
-      selected_option_index: index,
-      is_correct: index === question.correct_answer_index
-    });
+    setHasSelected(true);
+    onAnswerSelected(index);
   };
 
   const handleNextQuestion = () => {
     setSelectedOptionIndex(null);
-    setShowFeedback(false);
+    setHasSelected(false);
     onNextQuestion();
   };
 
@@ -66,14 +61,14 @@ export const QuizQuestion = ({
   };
 
   const nextButtonStyle = {
-    backgroundColor: showFeedback ? colors.PRIMARY : colors.NEUTRAL,
+    backgroundColor: hasSelected ? colors.PRIMARY : colors.NEUTRAL,
     color: '#fff',
     padding: '0.75rem 1.5rem',
     marginTop: '1.5rem',
     borderRadius: '0.375rem',
     border: 'none',
-    cursor: showFeedback ? 'pointer' : 'not-allowed',
-    opacity: showFeedback ? 1 : 0.5,
+    cursor: hasSelected ? 'pointer' : 'not-allowed',
+    opacity: hasSelected ? 1 : 0.5,
     fontSize: '1rem',
     fontWeight: '500',
     width: '100%'
@@ -97,11 +92,11 @@ export const QuizQuestion = ({
           onSelectAnswer={handleSelectAnswer}
           selectedIndex={selectedOptionIndex}
           correctIndex={question.correct_answer_index}
-          showFeedback={showFeedback}
-          disabled={showFeedback}
+          showFeedback={false}
+          disabled={hasSelected}
         />
 
-        {showFeedback && (
+        {hasSelected && (
           <button
             onClick={handleNextQuestion}
             style={nextButtonStyle}

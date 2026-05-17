@@ -55,25 +55,25 @@ describe('AnswerOptions Component (T067)', () => {
     expect(onSelectAnswer).toHaveBeenCalledWith(0);
   });
 
-  it('shows correct answer feedback in green', () => {
+  it('does not show inline feedback panel (feedback deferred to results screen)', () => {
     const onSelectAnswer = vi.fn();
 
-    const { container } = render(
+    render(
       <AnswerOptions
         options={mockOptions}
         onSelectAnswer={onSelectAnswer}
         selectedIndex={0}
         correctIndex={0}
-        showFeedback={true}
+        showFeedback={false}
         disabled={true}
       />
     );
 
-    expect(screen.getByText('✓ Correct!')).toBeInTheDocument();
-    expect(screen.getByText(/You selected the right answer/)).toBeInTheDocument();
+    expect(screen.queryByText('✓ Correct!')).not.toBeInTheDocument();
+    expect(screen.queryByText(/You selected the right answer/)).not.toBeInTheDocument();
   });
 
-  it('shows incorrect answer feedback in red', () => {
+  it('does not show incorrect feedback panel during quiz', () => {
     const onSelectAnswer = vi.fn();
 
     render(
@@ -82,13 +82,13 @@ describe('AnswerOptions Component (T067)', () => {
         onSelectAnswer={onSelectAnswer}
         selectedIndex={2}
         correctIndex={0}
-        showFeedback={true}
+        showFeedback={false}
         disabled={true}
       />
     );
 
-    expect(screen.getByText('✗ Incorrect')).toBeInTheDocument();
-    expect(screen.getByText(/The correct answer is.*Water/)).toBeInTheDocument();
+    expect(screen.queryByText('✗ Incorrect')).not.toBeInTheDocument();
+    expect(screen.queryByText(/The correct answer is/)).not.toBeInTheDocument();
   });
 
   it('disables buttons after answer selection', async () => {
@@ -226,11 +226,7 @@ describe('QuizQuestion Component (T068)', () => {
     const waterButton = screen.getByRole('button', { name: /Option A.*Water/ });
     await user.click(waterButton);
 
-    expect(onAnswerSelected).toHaveBeenCalledWith({
-      question_id: mockQuestion.id,
-      selected_option_index: 0,
-      is_correct: true,
-    });
+    expect(onAnswerSelected).toHaveBeenCalledWith(0);
   });
 
   it('calls onNextQuestion when next button is clicked', async () => {

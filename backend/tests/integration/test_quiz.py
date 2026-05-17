@@ -210,7 +210,7 @@ def test_generate_multiple_choice_quiz(client, test_db):
 
 def test_generate_quiz_with_insufficient_vocabulary(client, test_db):
     """Test that quiz generation fails with insufficient vocabulary"""
-    # Create only 2 vocabulary entries (need at least 4)
+    # Create only 2 vocabulary entries (need at least 10)
     for i in range(2):
         word = Word(german_word=f"Word{i}", meaning=f"Meaning{i}")
         test_db.add(word)

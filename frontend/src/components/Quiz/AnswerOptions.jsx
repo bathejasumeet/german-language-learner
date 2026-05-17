@@ -6,7 +6,8 @@ export const AnswerOptions = ({
   selectedIndex, 
   correctIndex, 
   showFeedback,
-  disabled 
+  disabled,
+  reviewMode = false,
 }) => {
   const buttonLabels = ['A', 'B', 'C', 'D'];
 
@@ -24,8 +25,8 @@ export const AnswerOptions = ({
       opacity: disabled ? 0.7 : 1,
     };
 
-    if (!showFeedback && selectedIndex === index) {
-      // Selected but not answered yet
+    if (selectedIndex === index && !reviewMode) {
+      // Selected during quiz — highlight blue only, no correctness colouring
       return {
         ...baseStyle,
         backgroundColor: colors.PRIMARY,
@@ -35,9 +36,8 @@ export const AnswerOptions = ({
       };
     }
 
-    if (showFeedback) {
+    if (reviewMode) {
       if (index === correctIndex) {
-        // Correct answer
         return {
           ...baseStyle,
           backgroundColor: colors.SUCCESS,
@@ -45,7 +45,6 @@ export const AnswerOptions = ({
           boxShadow: `0 2px 8px rgba(16, 185, 129, 0.3)`
         };
       } else if (index === selectedIndex && selectedIndex !== correctIndex) {
-        // Incorrect answer selected
         return {
           ...baseStyle,
           backgroundColor: colors.ERROR,
@@ -81,7 +80,7 @@ export const AnswerOptions = ({
             key={index}
             onClick={() => handleClick(index)}
             style={getButtonStyle(index)}
-            disabled={disabled || (showFeedback && index !== selectedIndex && index !== correctIndex)}
+            disabled={disabled}
             aria-label={`Option ${buttonLabels[index]}: ${option}`}
             aria-pressed={selectedIndex === index}
           >
@@ -92,35 +91,6 @@ export const AnswerOptions = ({
           </button>
         ))}
       </div>
-
-      {showFeedback && (
-        <div
-          style={{
-            marginTop: '1rem',
-            padding: '1rem',
-            borderRadius: '0.5rem',
-            backgroundColor: selectedIndex === correctIndex ? '#ecfdf5' : '#fef2f2',
-            borderLeft: `4px solid ${selectedIndex === correctIndex ? colors.SUCCESS : colors.ERROR}`,
-            color: colors.TEXT
-          }}
-        >
-          {selectedIndex === correctIndex ? (
-            <div>
-              <div style={{ fontWeight: 'bold', color: colors.SUCCESS }}>✓ Correct!</div>
-              <div style={{ fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                You selected the right answer.
-              </div>
-            </div>
-          ) : (
-            <div>
-              <div style={{ fontWeight: 'bold', color: colors.ERROR }}>✗ Incorrect</div>
-              <div style={{ fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                The correct answer is <strong>{buttonLabels[correctIndex]}</strong>: {options[correctIndex]}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 };

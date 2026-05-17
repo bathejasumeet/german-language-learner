@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 _PROMPT_TEMPLATE = (
     "You are a German language teacher. Given a German word and its meaning, "
-    "generate exactly 3 creative, memorable English sentences that help learners "
+    "generate exactly 3 creative, memorable German sentences that help learners "
     'remember the German word "{word}" (meaning: "{meaning}"). '
     "Each sentence must include the German word. "
     "Number them 1, 2, 3. "

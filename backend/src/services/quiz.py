@@ -119,7 +119,7 @@ class QuizService:
     
     # ============= Multiple-Choice Quiz Methods =============
     
-    MINIMUM_VOCABULARY_COUNT = 4
+    MINIMUM_VOCABULARY_COUNT = 10
     
     @staticmethod
     def validate_quiz_prerequisites() -> bool:

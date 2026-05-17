@@ -113,7 +113,7 @@ async def generate_quiz(
             vocab_count = QuizService.get_vocabulary_count()
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"Insufficient vocabulary. Need at least 4 entries to generate quiz. Current: {vocab_count}"
+                detail=f"Insufficient vocabulary. Need at least 10 entries to generate quiz. Current: {vocab_count}"
             )
 
         quiz_id, questions = QuizService.generate_quiz(count)

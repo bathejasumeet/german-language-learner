@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
 import { vocabularyService } from '../../services/vocabulary';
-import { quizService } from '../../services/quiz';
+import { quizService } from '../../services/quizService';
+import { QuizQuestion } from './QuizQuestion';
+import { colors } from '../../services/colors';
 import './QuizComponent.css';
 
-export const QuizComponent = () => {
+const MIN_WORDS = 10;
+
+export const QuizComponent = ({ onNavigateToWords } = {}) => {
   const [words, setWords] = useState([]);
   const [quizState, setQuizState] = useState('start');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
-  const [answers, setAnswers] = useState([]);
+  const [userAnswers, setUserAnswers] = useState([]);
+  const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [totalQuestions, setTotalQuestions] = useState(10);
@@ -31,56 +36,70 @@ export const QuizComponent = () => {
   };
 
   const startQuiz = async () => {
-    if (words.length === 0) {
-      setError('No words available for quiz');
+    if (words.length < MIN_WORDS) {
+      setError(`You need at least ${MIN_WORDS} words to take a quiz. You currently have ${words.length}.`);
       return;
     }
     setLoading(true);
+    setError('');
     try {
-      const response = await quizService.createQuiz(totalQuestions);
-      setQuizId(response.data.id);
-      setQuizState('quiz');
+      const response = await quizService.generateQuiz(totalQuestions);
+      setQuizId(response.data.quiz_id);
+      setQuestions(response.data.questions);
       setCurrentQuestion(0);
       setScore(0);
-      setAnswers([]);
-      setError('');
+      setUserAnswers([]);
+      setQuizState('quiz');
     } catch (err) {
-      setError('Failed to start quiz');
+      setError('Failed to start quiz. Please ensure you have at least 10 words.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAnswer = async (isCorrect) => {
-    const newAnswers = [...answers, isCorrect];
-    setAnswers(newAnswers);
-    const newScore = score + (isCorrect ? 1 : 0);
-    if (currentQuestion < totalQuestions - 1) {
-      setScore(newScore);
-      setCurrentQuestion(currentQuestion + 1);
+  const handleAnswer = (selectedOptionIndex) => {
+    const question = questions[currentQuestion];
+    const isCorrect = selectedOptionIndex === question.correct_answer_index;
+    setUserAnswers((prev) => [...prev, { question, selectedOptionIndex, isCorrect }]);
+    setScore((prev) => prev + (isCorrect ? 1 : 0));
+    // Question advancement happens in handleNextQuestion when user clicks Next
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion((prev) => prev + 1);
     } else {
-      try {
-        await quizService.submitQuiz(quizId, newScore);
-        setScore(newScore);
-        setQuizState('results');
-      } catch (err) {
-        setScore(newScore);
-        setQuizState('results');
-      }
+      // Last question — transition to results and persist
+      setQuizState('results');
     }
   };
 
-  const getQuizOptions = () => {
-    if (words.length < 4) return [];
-    const correctWord = words[currentQuestion % words.length];
-    const options = [correctWord];
-    while (options.length < 4) {
-      const randomWord = words[Math.floor(Math.random() * words.length)];
-      if (!options.some((w) => w.id === randomWord.id)) {
-        options.push(randomWord);
-      }
+  // Fire-and-forget persistence when quiz completes
+  useEffect(() => {
+    if (quizState === 'results' && quizId && userAnswers.length > 0) {
+      quizService.completeQuiz(
+        quizId,
+        score,
+        questions.length,
+        questions.map((q) => q.vocabulary_id),
+        userAnswers.map((a) => ({
+          question_id: a.question.id,
+          selected_option_index: a.selectedOptionIndex,
+          is_correct: a.isCorrect,
+        })),
+        null
+      ).catch(() => {});
     }
-    return options.sort(() => Math.random() - 0.5);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quizState]);
+
+  const resetQuiz = () => {
+    setQuizState('start');
+    setUserAnswers([]);
+    setQuestions([]);
+    setScore(0);
+    setCurrentQuestion(0);
+    setError('');
   };
 
   if (loading && quizState === 'start') {
@@ -88,6 +107,22 @@ export const QuizComponent = () => {
   }
 
   if (quizState === 'start') {
+    if (!loading && words.length < MIN_WORDS) {
+      return (
+        <div className="quiz-start">
+          <h2>German Language Quiz</h2>
+          <div className="quiz-error" role="alert" aria-live="assertive">
+            You need at least {MIN_WORDS} words to start a quiz. You currently have {words.length}.
+            Please add more words first.
+          </div>
+          {onNavigateToWords && (
+            <button onClick={onNavigateToWords} className="btn-secondary" style={{ marginTop: '1rem' }}>
+              Go to Words
+            </button>
+          )}
+        </div>
+      );
+    }
     return (
       <div className="quiz-start">
         <h2>German Language Quiz</h2>
@@ -105,7 +140,7 @@ export const QuizComponent = () => {
           </select>
         </div>
         <p className="quiz-available">Available words: {words.length}</p>
-        <button onClick={startQuiz} disabled={words.length === 0} className="btn-primary">
+        <button onClick={startQuiz} disabled={loading} className="btn-primary">
           Start Quiz
         </button>
       </div>
@@ -113,46 +148,79 @@ export const QuizComponent = () => {
   }
 
   if (quizState === 'quiz') {
-    const options = getQuizOptions();
-    const correctWord = words[currentQuestion % words.length];
+    const question = questions[currentQuestion];
+    if (!question) return null;
     return (
       <div className="quiz-container">
         <div className="quiz-progress-bar">
           <div
             className="quiz-progress-fill"
-            style={{ width: `${((currentQuestion + 1) / totalQuestions) * 100}%` }}
+            style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
           />
         </div>
-        <p className="quiz-counter">Question {currentQuestion + 1} of {totalQuestions}</p>
-        <div className="quiz-question">
-          <p>What is the meaning of</p>
-          <strong className="quiz-word">{correctWord.german_word}</strong>
-        </div>
-        <div className="quiz-options" role="group" aria-label="Answer options">
-          {options.map((word) => (
-            <button
-              key={word.id}
-              className="quiz-option-btn"
-              onClick={() => handleAnswer(word.id === correctWord.id)}
-            >
-              {word.meaning}
-            </button>
-          ))}
-        </div>
+        <QuizQuestion
+          question={question}
+          currentIndex={currentQuestion}
+          totalQuestions={questions.length}
+          onAnswerSelected={handleAnswer}
+          onNextQuestion={handleNextQuestion}
+        />
       </div>
     );
   }
 
   if (quizState === 'results') {
-    const percentage = Math.round((score / totalQuestions) * 100);
+    const percentage = questions.length > 0 ? Math.round((score / questions.length) * 100) : 0;
     return (
       <div className="quiz-results">
-        <h2>Quiz complete</h2>
+        <h2>Quiz Complete</h2>
         <div className="quiz-score">
           <span className="quiz-score-pct">{percentage}%</span>
-          <span className="quiz-score-text">{score} of {totalQuestions} correct</span>
+          <span className="quiz-score-text">{score} of {questions.length} correct</span>
         </div>
-        <button onClick={() => setQuizState('start')} className="btn-primary">Take Another Quiz</button>
+
+        <div style={{ marginTop: '2rem' }}>
+          {userAnswers.map((answer, idx) => (
+            <div
+              key={idx}
+              style={{
+                padding: '1rem',
+                marginBottom: '0.75rem',
+                borderRadius: '0.5rem',
+                border: `2px solid ${answer.isCorrect ? colors.SUCCESS : colors.ERROR}`,
+                backgroundColor: answer.isCorrect ? '#ecfdf5' : '#fef2f2',
+              }}
+            >
+              <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>
+                <span style={{ color: answer.isCorrect ? colors.SUCCESS : colors.ERROR, marginRight: '0.5rem' }}>
+                  {answer.isCorrect ? '✓' : '✗'}
+                </span>
+                {answer.question.german_word}
+              </div>
+              <div style={{ fontSize: '0.9rem' }}>
+                <span style={{ color: '#6b7280' }}>Your answer: </span>
+                <span style={{ fontWeight: '500', color: answer.isCorrect ? colors.SUCCESS : colors.ERROR }}>
+                  {answer.question.options[answer.selectedOptionIndex]}
+                </span>
+              </div>
+              {!answer.isCorrect && (
+                <div style={{ fontSize: '0.9rem', marginTop: '0.25rem' }}>
+                  <span style={{ color: '#6b7280' }}>Correct answer: </span>
+                  <span style={{ fontWeight: '500', color: colors.SUCCESS }}>
+                    {answer.question.options[answer.question.correct_answer_index]}
+                  </span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
+          <button onClick={resetQuiz} className="btn-primary">Take Another Quiz</button>
+          {onNavigateToWords && (
+            <button onClick={onNavigateToWords} className="btn-secondary">Go to Words</button>
+          )}
+        </div>
       </div>
     );
   }
