@@ -45,23 +45,30 @@ export const FlashcardStudy = () => {
     } catch (err) {
       // silently skip if marking fails
     }
-    handleNextCard();
+    goToCard(currentIndex + 1);
+  };
+
+  const goToCard = (nextIndex) => {
+    if (nextIndex >= flashcards.length) {
+      setIsFlipped(false);
+      setStudyMode('complete');
+      return;
+    }
+
+    if (nextIndex < 0 || nextIndex === currentIndex) {
+      return;
+    }
+
+    setIsFlipped(false);
+    setCurrentIndex(nextIndex);
   };
 
   const handleNextCard = () => {
-    if (currentIndex < flashcards.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-      setIsFlipped(false);
-    } else {
-      setStudyMode('complete');
-    }
+    goToCard(currentIndex + 1);
   };
 
   const handlePrevCard = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-      setIsFlipped(false);
-    }
+    goToCard(currentIndex - 1);
   };
 
   if (loading) {
@@ -104,20 +111,26 @@ export const FlashcardStudy = () => {
       <p className="flashcard-counter">{currentIndex + 1} / {flashcards.length}</p>
 
       <button
-        className={`flashcard-card${isFlipped ? ' flipped' : ''}`}
+        className={`flashcard-card${isFlipped ? ' revealed' : ''}`}
         onClick={() => setIsFlipped(!isFlipped)}
-        aria-label={isFlipped ? `Back: ${word.meaning}` : `Front: ${word.german_word}. Click to reveal meaning.`}
+        aria-label={isFlipped ? `Meaning: ${word.meaning}. Click to show German word.` : `German word: ${word.german_word}. Click to reveal meaning.`}
       >
-        <div className="flashcard-face flashcard-front">
-          <span className="flashcard-label">German</span>
-          <span className="flashcard-word">{word.german_word}</span>
-          <span className="flashcard-hint">tap to flip</span>
-        </div>
-        <div className="flashcard-face flashcard-back">
-          <span className="flashcard-label">English</span>
-          <span className="flashcard-word">{word.meaning}</span>
-          {word.example_sentence && (
-            <span className="flashcard-example">{word.example_sentence}</span>
+        <div className="flashcard-face">
+          {isFlipped ? (
+            <>
+              <span className="flashcard-label">Meaning</span>
+              <span className="flashcard-word">{word.meaning}</span>
+              {word.example_sentence && (
+                <span className="flashcard-example">{word.example_sentence}</span>
+              )}
+              <span className="flashcard-hint">tap to show word</span>
+            </>
+          ) : (
+            <>
+              <span className="flashcard-label">German</span>
+              <span className="flashcard-word">{word.german_word}</span>
+              <span className="flashcard-hint">tap to reveal meaning</span>
+            </>
           )}
         </div>
       </button>
