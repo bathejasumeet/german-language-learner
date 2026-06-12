@@ -1,76 +1,104 @@
-# Implementation Plan: Enhance Quiz Section
+# Implementation Plan: [FEATURE]
 
-**Branch**: `006-enhance-quiz-section` | **Date**: 2026-05-13 | **Spec**: [spec.md](spec.md)  
-**Input**: Feature specification from `/specs/006-enhance-quiz-section/spec.md`
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
-Fix the quiz section so it shows a clear error when fewer than 10 words are available (instead of freezing), and replace the current flow with a proper four-option multiple-choice quiz where correctness is only revealed at the end via a per-question results review screen.
-
-The backend already has a working `/api/v1/quiz/generate` endpoint that generates randomised four-option questions with shuffled answer positions. The changes are mostly frontend-side (QuizComponent, QuizQuestion, AnswerOptions) plus raising the backend `MINIMUM_VOCABULARY_COUNT` constant from 4 to 10.
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
 
-**Language/Version**: Python 3.11 (backend), JavaScript ES2022 / React 19.2.4 (frontend)  
-**Primary Dependencies**: FastAPI 0.135, CSV file store (no new dependencies); React 19, Vite 8, Axios 1.15  
-**Storage**: CSV files under `backend/data/` (no schema changes)  
-**Testing**: pytest (backend), Vitest + React Testing Library (frontend)  
-**Target Platform**: Local web app — browser (desktop-first)  
-**Project Type**: Web application (FastAPI backend + React frontend)  
-**Performance Goals**: Quiz generation < 200 ms; results screen renders immediately (no extra network call)  
-**Constraints**: No new npm/pip dependencies; no new API endpoints; existing CSV data model unchanged  
-**Scale/Scope**: Single-user app; quiz sessions up to 20 questions
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
+
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
-_GATE: Checked before Phase 0 research and re-verified after Phase 1 design._
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-| Principle                        | Status | Notes                                                                                                  |
-| -------------------------------- | ------ | ------------------------------------------------------------------------------------------------------ |
-| I. Code Quality                  | PASS   | All changes are in existing modules; no dead code added                                                |
-| II. Testing Standards            | PASS   | Backend unit test updated; frontend tests updated with meaningful assertions                           |
-| III. User Experience Consistency | PASS   | Error state, quiz flow, and results screen follow existing design patterns (CSS classes, color tokens) |
-| IV. Performance Requirements     | PASS   | No additional network round-trips; quiz data held client-side for results review                       |
-
-No violations. Complexity Tracking section not required.
+[Gates determined based on constitution file]
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/006-enhance-quiz-section/
-├── plan.md              ← this file
-├── research.md          ← Phase 0 output
-├── data-model.md        ← Phase 1 output
-├── quickstart.md        ← Phase 1 output
-├── contracts/
-│   └── api.md           ← Phase 1 output
-└── tasks.md             ← Phase 2 output (/speckit.tasks)
+specs/[###-feature]/
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
 ### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
 ```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+src/
+├── models/
+├── services/
+├── cli/
+└── lib/
+
+tests/
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
 backend/
 ├── src/
+│   ├── models/
 │   ├── services/
-│   │   └── quiz.py          ← MINIMUM_VOCABULARY_COUNT 4 → 10; updated error message
 │   └── api/
-│       └── quiz.py          ← No changes (endpoint already correct)
 └── tests/
-    └── unit/
-        └── test_quiz_service.py   ← Update constant test
 
 frontend/
 ├── src/
-│   └── components/
-│       └── Quiz/
-│           ├── QuizComponent.jsx   ← Word-count guard; generateQuiz(); deferred feedback; results review
-│           ├── QuizQuestion.jsx    ← Remove immediate feedback; hasSelected flag
-│           └── AnswerOptions.jsx   ← Remove green/red during quiz; add review-mode prop
+│   ├── components/
+│   ├── pages/
+│   └── services/
 └── tests/
-    └── quiz.test.jsx               ← Updated tests for new flow
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: Web application layout (Option 2). Both backend and frontend sub-projects are affected. No new files; all changes are in-place edits of existing modules.
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
+
+## Complexity Tracking
+
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
