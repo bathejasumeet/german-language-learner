@@ -180,7 +180,7 @@ class QuizService:
                 question = QuizQuestion(
                     id=f"q_{q_idx + 1}",
                     vocabulary_id=correct_vocab["id"],
-                    question=f"What is the English meaning of: {correct_vocab['german_word']}?",
+                    question=f"What is the meaning of: {correct_vocab['german_word']}?",
                     german_word=correct_vocab["german_word"],
                     english_meaning=correct_vocab["meaning"],
                     options=shuffled_options,

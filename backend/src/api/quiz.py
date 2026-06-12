@@ -36,6 +36,53 @@ async def get_quizzes(skip: int = 0, limit: int = 100):
     return QuizService.get_all_quizzes(skip=skip, limit=limit)
 
 
+@router.get("/generate", response_model=QuizGenerateResponse, status_code=status.HTTP_201_CREATED)
+async def generate_quiz(
+    count: int = Query(10, ge=1, le=20),
+):
+    """
+    Generate a new multiple-choice quiz with specified number of questions.
+    """
+    try:
+        if not QuizService.validate_quiz_prerequisites():
+            vocab_count = QuizService.get_vocabulary_count()
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=f"Insufficient vocabulary. Need at least 10 entries to generate quiz. Current: {vocab_count}"
+            )
+
+        quiz_id, questions = QuizService.generate_quiz(count)
+        
+        # Convert QuizQuestion dataclass objects to dict for response
+        questions_data = [
+            {
+                "id": q.id,
+                "vocabulary_id": q.vocabulary_id,
+                "question": q.question,
+                "german_word": q.german_word,
+                "english_meaning": q.english_meaning,
+                "options": q.options,
+                "correct_answer_index": q.correct_answer_index
+            }
+            for q in questions
+        ]
+        
+        logger.info(f"Generated quiz {quiz_id} with {len(questions)} questions")
+        
+        return {
+            "quiz_id": quiz_id,
+            "total_questions": len(questions),
+            "questions": questions_data
+        }
+        
+    except ValueError as e:
+        logger.error(f"Quiz generation error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+
 @router.get("/{quiz_id}", response_model=Quiz)
 async def get_quiz(quiz_id: int):
     """Get a specific quiz session"""
@@ -97,55 +144,6 @@ async def get_word_progress(word_id: int):
 async def get_user_statistics():
     """Get overall user statistics"""
     return QuizService.get_user_statistics()
-
-
-# ============= Multiple-Choice Quiz Endpoints =============
-
-@router.post("/generate", response_model=QuizGenerateResponse, status_code=status.HTTP_201_CREATED)
-async def generate_quiz(
-    count: int = Query(10, ge=1, le=20),
-):
-    """
-    Generate a new multiple-choice quiz with specified number of questions.
-    """
-    try:
-        if not QuizService.validate_quiz_prerequisites():
-            vocab_count = QuizService.get_vocabulary_count()
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=f"Insufficient vocabulary. Need at least 10 entries to generate quiz. Current: {vocab_count}"
-            )
-
-        quiz_id, questions = QuizService.generate_quiz(count)
-        
-        # Convert QuizQuestion dataclass objects to dict for response
-        questions_data = [
-            {
-                "id": q.id,
-                "vocabulary_id": q.vocabulary_id,
-                "question": q.question,
-                "german_word": q.german_word,
-                "english_meaning": q.english_meaning,
-                "options": q.options,
-                "correct_answer_index": q.correct_answer_index
-            }
-            for q in questions
-        ]
-        
-        logger.info(f"Generated quiz {quiz_id} with {len(questions)} questions")
-        
-        return {
-            "quiz_id": quiz_id,
-            "total_questions": len(questions),
-            "questions": questions_data
-        }
-        
-    except ValueError as e:
-        logger.error(f"Quiz generation error: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
 
 
 @router.post("/submit", response_model=QuizAnswerFeedback)
